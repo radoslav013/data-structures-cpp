@@ -1,7 +1,7 @@
 #ifndef DOUBLY_LINKED_LIST
 #define DOUBLY_LINKED_LIST
 
-template <typename T>
+template <typename E>
 class Node;
 
 template <typename T>
