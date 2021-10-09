@@ -7,21 +7,21 @@ class Node;
 template <typename T>
 class DoublyLinkedList {
     public:
-        DoublyLinkedList();
-        ~DoublyLinkedList();
-        bool empty() const;
-        const T& front() const;
-        const T& back() const;
-        void addFront(const T& value);
-        void addBack(const T& value);
-        void removeFront();
-        void removeBack();
+        DoublyLinkedList(); // constructor
+        ~DoublyLinkedList(); // destructor
+        bool empty() const; // checks if empty?
+        const T& front() const; // get value at the front 
+        const T& back() const; // get value at the back
+        void addFront(const T& value); // add to the front
+        void addBack(const T& value); // add to the back
+        void removeFront(); // remove from the front
+        void removeBack(); // remove from the back
     private:
-        Node<T>* head;
-        Node<T>* tail;
+        Node<T>* head; //special node that holds the first dummy node
+        Node<T>* tail; //special node that holds the last dummy node
     protected:
-        void add(Node<T>* v, const T& value);
-        void remove(Node<T>* v);
+        void add(Node<T>* v, const T& value); // add before v
+        void remove(Node<T>* v); // remove v
 };
 
 #endif
