@@ -3,7 +3,7 @@
 
 using namespace std;
 
-#include "doubly-linked-list.h"
+#include "doubly-linked-list.cpp"
 
 int main() {
     DoublyLinkedList<int>* list = new DoublyLinkedList<int>();
