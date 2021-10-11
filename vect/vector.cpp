@@ -7,7 +7,17 @@ using namespace std;
 template <typename T>
 Vector<T>::Vector(int numb) {
     this->numb = numb;
-    ptr_arr = new T[this->numb];
+    initArr();
+}
+
+template <typename T>
+void Vector<T>::initArr() {
+    try {
+        ptr_arr = new T[this->numb];
+    } catch(bad_alloc &excpt) {
+        cout << excpt.what() << endl;
+		throw;
+    }
 }
 
 template <typename T>
@@ -41,7 +51,7 @@ template <typename T>
 void Vector<T>::copy(const Vector<T> &vect) {
     this->numb = vect.numb;
 
-    ptr_arr = new T[this->numb];
+    initArr();
     for(int i = 0; i < numb; i++) {
         ptr_arr[i] = vect.ptr_arr[i];
     }

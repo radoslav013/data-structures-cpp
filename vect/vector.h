@@ -15,6 +15,7 @@ class Vector {
     protected:
         int numb;
         T* ptr_arr;
+        void initArr();
         void free();
         void copy(const Vector<T> &vect);
 
