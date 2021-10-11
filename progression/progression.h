@@ -9,7 +9,7 @@ class Progression {
 
     protected:
         virtual long getFirst();
-        virtual long getNext();
+        virtual long getNext() = 0;
         long frst;
         long curr;
 };
