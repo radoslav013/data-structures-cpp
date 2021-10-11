@@ -2,8 +2,8 @@
 
 using namespace std;
 
-#include "vector.h"
-#include "algvector.h"
+#include "vector.cpp"
+#include "algvector.cpp"
 
 int main() {
 
@@ -13,6 +13,6 @@ int main() {
     AlgVector<int> v2(4);
     cin >> v2;
 
-    cout << v1 - v2 << endl;
+    // cout << v1 - v2 << endl;
     return 0;
 }

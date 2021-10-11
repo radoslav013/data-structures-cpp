@@ -1,11 +1,13 @@
 #include <iostream>
 
+using namespace std;
+
 #include "vector.h"
 
 template <typename T>
 Vector<T>::Vector(int numb) {
     this->numb = numb;
-    ptr_arr = new int[this->numb];
+    ptr_arr = new T[this->numb];
 }
 
 template <typename T>
@@ -39,32 +41,8 @@ template <typename T>
 void Vector<T>::copy(const Vector<T> &vect) {
     this->numb = vect.numb;
 
-    ptr_arr = new int[this->numb];
+    ptr_arr = new T[this->numb];
     for(int i = 0; i < numb; i++) {
         ptr_arr[i] = vect.ptr_arr[i];
     }
-}
-
-template <typename T>
-ostream &operator <<(ostream &out, Vector<T> const &vect) {
-    out << "Size: " << vect.numb << endl;
-
-    for(int i = 0; i < vect.numb; i++) {
-        out << vect.ptr_arr[i] << " ";
-    }
-
-    out << endl;
-    return out;
-}
-
-template <typename T>
-istream &operator >>(istream &in, Vector<T> &vect) {
-    vect.free();
-
-    in >> vect.numb;
-    vect.ptr_arr = new int[vect.numb];
-    for(int i = 0; i < vect.numb; i++) {
-        in >> vect.ptr_arr[i];
-    }
-    return in;
 }

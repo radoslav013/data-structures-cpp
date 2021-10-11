@@ -1,5 +1,4 @@
 
-#include "vector.h"
 #include "algvector.h"
 
 template <typename T>
