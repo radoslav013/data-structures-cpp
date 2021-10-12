@@ -2,8 +2,8 @@
 
 using namespace std;
 
-#include "vector.cpp"
-#include "algvector.cpp"
+#include "vector.h"
+#include "algvector.h"
 
 int main() {
 
