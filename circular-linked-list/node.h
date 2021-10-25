@@ -7,7 +7,7 @@ class Node {
         E value;
         Node<E>* next;
 
-        friend class CircularLinkedList;
+        friend class CircularLinkedList<E>;
 };
 
 #endif

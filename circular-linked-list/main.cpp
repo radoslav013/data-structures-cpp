@@ -1,14 +1,16 @@
 #include <iostream>
+#include <string>
 
 using namespace std;
 
 #include "circular-linked-list.h"
+#include "node.h"
 
 int main() {
-    CircularLinkedList* list = new CircularLinkedList();
-    list->add(5);
+    CircularLinkedList<string>* list = new CircularLinkedList<string>();
+    list->add("five");
     cout << list->back() << endl;
-    list->add(10);
+    list->add("ten");
 
     list->advance();
     cout << list->back() << endl;
