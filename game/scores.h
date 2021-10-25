@@ -7,7 +7,8 @@ class Scores {
         Scores(int max_entries);
         ~Scores();
         void add(const GameEntry &entry);
-
+        void remove(int i);
+        int getNumEntries() const;
     private:
         int max_entries;
         int num_entries;

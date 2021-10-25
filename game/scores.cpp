@@ -37,3 +37,20 @@ void Scores::add(const GameEntry &entry) {
     }
     this->ptr_arr[i + 1] = entry;
 }
+
+void Scores::remove(int i) {
+    if(i >= num_entries) {
+        return;
+    }
+    
+    int j = i;
+    while(j < this->num_entries) {
+        this->ptr_arr[j] = this->ptr_arr[j + 1];
+        j++;
+    }
+    this->num_entries--;
+} 
+
+int Scores::getNumEntries() const {
+    return this->num_entries;
+}
