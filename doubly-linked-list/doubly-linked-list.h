@@ -100,27 +100,30 @@ void DoublyLinkedList<T>::remove(Node<T>* v) {
 template <typename T>
 void DoublyLinkedList<T>::reverse() {
     Node<T>* current = head->next;
-    // while(current->next != tail) {
-        Node<T>* prev = current->prev;
-        Node<T>* next = current->next;
-        cout << "is head: " << (current->prev == head ? 1 : 0) << " ";
-        cout << "current: " << current->value << " ";
-        cout << "next: " << current->next->value << " ";
-        prev->next = next;
-        next->prev = prev;
-
-        next->next = current;
-        current->next = tail;
-        current->prev = next;
-
-        cout << endl;
-    // }
+    Node<T>* next;
 
     head->next = next;
+    while(current->next != tail) {
+        Node<T>* prev = current->prev;
+        next = current->next;
+        // cout << "is head: " << (current->prev == head ? 1 : 0) << " ";
+        // cout << "current: " << current->value << " ";
+        // cout << "next: " << current->next->value << " ";
+        prev->next = next;
+        next->prev = prev;
+        next->next = current;
 
-    cout << "first: " << head->next->value << endl;
-    cout << "second: " << head->next->next->value << endl;
-    print();
+        current->next = tail; // Wrong.
+        
+        current->prev = next;
+
+        // cout << endl;
+    }
+
+    tail->prev = next;
+
+    // cout << "first: " << head->next->value << endl;
+    // cout << "second: " << head->next->next->value << endl;
 }
 
 template <typename T>

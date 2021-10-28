@@ -9,7 +9,7 @@ using namespace std;
 int main() {
     DoublyLinkedList<int>* list = new DoublyLinkedList<int>();
     list->addFront(6);
-    // list->addFront(7);
+    list->addFront(7);
     // list->addFront(8);
     // list->addFront(9);
     // list->addFront(10);
@@ -25,7 +25,7 @@ int main() {
     list->print();
     cout << "Reversed: " << endl;
     list->reverse();
-    // list->print();
+    list->print();
 
     if(list){
         delete list;
