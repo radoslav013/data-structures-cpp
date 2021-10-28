@@ -8,13 +8,29 @@ using namespace std;
 
 int main() {
     DoublyLinkedList<int>* list = new DoublyLinkedList<int>();
-    list->addFront(5);
-    cout << list->front() << endl;
-    cout << list->back() << endl;
+    list->addFront(6);
+    // list->addFront(7);
+    // list->addFront(8);
+    // list->addFront(9);
+    // list->addFront(10);
+    // list->addFront(11);
+    list->addFront(12);
+    // cout << list->frontValue() << endl;
+    // cout << list->backValue() << endl;
 
-    list->removeFront();
+    // list->removeFront();
 
-    cout << list->empty() << endl;
-    delete list;
+    // cout << list->empty() << endl;
+
+    list->print();
+    cout << "Reversed: " << endl;
+    list->reverse();
+    // list->print();
+
+    if(list){
+        delete list;
+        list = nullptr;
+    }
+    
     return 0;
 }

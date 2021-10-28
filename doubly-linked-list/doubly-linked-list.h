@@ -10,12 +10,15 @@ class DoublyLinkedList {
         DoublyLinkedList(); // constructor
         ~DoublyLinkedList(); // destructor
         bool empty() const; // checks if empty?
-        const T& front() const; // get value at the front 
-        const T& back() const; // get value at the back
+        const T& frontValue() const; // get value at the front 
+        const T& backValue() const; // get value at the back
         void addFront(const T& value); // add to the front
         void addBack(const T& value); // add to the back
         void removeFront(); // remove from the front
         void removeBack(); // remove from the back
+        void reverse();
+        void swap(Node<T>* a, Node<T>* b);
+        void print() const;
     private:
         Node<T>* head; //special node that holds the first dummy node
         Node<T>* tail; //special node that holds the last dummy node
@@ -46,12 +49,12 @@ bool DoublyLinkedList<T>::empty() const {
 }
 
 template <typename T>
-const T& DoublyLinkedList<T>::front() const {
+const T& DoublyLinkedList<T>::frontValue() const {
     return head->next->value;
 }
 
 template <typename T>
-const T& DoublyLinkedList<T>::back() const {
+const T& DoublyLinkedList<T>::backValue() const {
     return tail->prev->value;
 }
 
@@ -92,6 +95,42 @@ void DoublyLinkedList<T>::remove(Node<T>* v) {
     v->prev->next = v->next;
     v->next->prev = v->prev;
     delete v;
+}
+
+template <typename T>
+void DoublyLinkedList<T>::reverse() {
+    Node<T>* current = head->next;
+    // while(current->next != tail) {
+        Node<T>* prev = current->prev;
+        Node<T>* next = current->next;
+        cout << "is head: " << (current->prev == head ? 1 : 0) << " ";
+        cout << "current: " << current->value << " ";
+        cout << "next: " << current->next->value << " ";
+        prev->next = next;
+        next->prev = prev;
+
+        next->next = current;
+        current->next = tail;
+        current->prev = next;
+
+        cout << endl;
+    // }
+
+    head->next = next;
+
+    cout << "first: " << head->next->value << endl;
+    cout << "second: " << head->next->next->value << endl;
+    print();
+}
+
+template <typename T>
+void DoublyLinkedList<T>::print() const {
+    Node<T>* curr = head->next;
+    while(curr != tail) {
+        cout << curr->value << " ";
+        curr = curr->next;
+    }
+    cout << endl;
 }
 
 #endif
