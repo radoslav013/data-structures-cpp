@@ -6,7 +6,7 @@ template <typename T>
 class Stack {
     public:
         Stack();
-        // ~Stack();
+        ~Stack();
         int size() const;
         bool empty() const;
         const T& top() const;
@@ -23,13 +23,13 @@ Stack<T>::Stack() {
     t = -1;
 }
 
-// template<typename T>
-// Stack<T>::~Stack() {
-    // if(elements) {
-    //     delete[] elements;
-    //     elements = nullptr;
-    // }
-// }
+template<typename T>
+Stack<T>::~Stack() {
+    if(elements) {
+        delete[] elements;
+        elements = nullptr;
+    }
+}
 
 template<typename T>
 int Stack<T>::size() const {
