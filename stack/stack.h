@@ -12,6 +12,7 @@ class Stack {
         const T& top() const;
         void push(const T& el);
         void pop();
+        void clear();
     private:
         T* elements;
         int t;
@@ -56,6 +57,14 @@ template<typename T>
 void Stack<T>::pop() {
     if(empty()) return;
     --t;
+}
+
+template<typename T>
+void Stack<T>::clear() {
+    if(!empty()) {
+        pop();
+        clear();
+    }
 }
 
 #endif
