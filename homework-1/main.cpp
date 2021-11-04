@@ -4,7 +4,7 @@
 // arithmetic progression, geometric progression, and harmonic progression. 
 
 // Show polymorphism.
-// Comments
+/// Comments
 // Build&Run commands section
 // Illustrate with examples
 // Explain each progression type with Greek Sum and induction
@@ -24,39 +24,47 @@ using namespace std;
 int main() {
     Progression* p;
 
-    cout << "Arithmetic progression with increment = 1" << endl;
+    double arit_incr = 1;
+    cout << "Arithmetic progression with increment = " << arit_incr << endl;
     p = new AritProgression();
+    cout << "The fifth element is: " << p->getNth(5) << endl;
     p->print();
 
-    double arit_incr = 15;
+    arit_incr = 15;
     cout << "Arithmetic progression with increment = " << arit_incr << endl;
     p = new AritProgression(arit_incr);
+    cout << "The fifth element is: " << p->getNth(5) << endl;
     p->print();
 
     arit_incr = -20;
     cout << "Arithmetic progression with increment = " << arit_incr << " which is decreasing" << endl;
     p = new AritProgression(arit_incr);
+    cout << "The fifth element is: " << p->getNth(5) << endl;
     p->print();
 
     double geom_base = 2;
     cout << "Geometric progression with base = " << geom_base << endl;
     p = new GeomProgression(geom_base);
+    cout << "The fifth element is: " << p->getNth(5) << endl;
     p->print();
 
     geom_base = 3;
     cout << "Geometric progression with base = " << geom_base << endl;
     p = new GeomProgression(geom_base);
+    cout << "The fifth element is: " << p->getNth(5) << endl;
     p->print();
 
     
     double harm_p = 1;
     cout << "Harmonic progression with p = " << harm_p << endl;
     p = new HarmProgression();
+    cout << "The fifth element is: " << p->getNth(5) << endl;
     p->print();
 
     harm_p = 2;
     cout << "Harmonic progression with p = " << harm_p << endl;
     p = new HarmProgression(harm_p);
+    cout << "The fifth element is: " << p->getNth(5) << endl;
     p->print();
 
     return 0;

@@ -3,12 +3,15 @@
 
 #include "progression.h"
 
+
 class HarmProgression : public Progression { // harmonic progression
     public:
-        HarmProgression(double p = 1) : Progression(1), p(p) {} // constructor
+        HarmProgression(double d = 1) : Progression(1), d(d), prev(1) {} // constructor
+        virtual double getNth(int n); // overriding the getNth from class Progression
 
     protected:
-        double p;
+        double d;
+        double prev;
         virtual double getNext(); // overriding the getNext from class Progression
 };
 

@@ -17,7 +17,3 @@ double Progression::getFirst() {
     curr = frst;
     return curr;
 }
-
-double Progression::getNext() {
-    return ++curr;
-}

@@ -6,9 +6,10 @@ class Progression { // non-specific progression
         Progression(double f = 0) : frst(f), curr(f) {} // constructor
         virtual ~Progression() {} // destructor
         void print(int n = 10); // print the first n elements of the sequence
+        virtual double getNth(int n) = 0; // can be overriden by derived classes and n >= 1
 
     protected:
-        virtual double getFirst(); // can be overriden by derived classes
+        double getFirst(); // can be overriden by derived classes
         virtual double getNext() = 0; // can be overriden by derived classes
         double frst;
         double curr;

@@ -5,10 +5,12 @@
 
 class AritProgression : public Progression { // arithmetic progression
     public:
-        AritProgression(double i = 1) : Progression(), incr(i) {} // constructor
+        AritProgression(double d = 1) : Progression(), d(d) {} // constructor
+        void print(int n = 10); // dummy
+        virtual double getNth(int n); // overriding the getNth from class Progression
 
     protected:
-        double incr; // the value which is added
+        double d; // the value which is added
         virtual double getNext(); // overriding the getNext from class Progression
 };
 
