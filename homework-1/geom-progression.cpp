@@ -1,16 +1,14 @@
-#include <iostream>
 #include <cmath>
 
-using namespace std;
 #include "geom-progression.h"
 
 // overriding the getNext from class Progression
 double GeomProgression::getNext() {
-    curr *= base;
+    curr *= r;
     return curr;
 }
 
 // overriding the getNth from class Progression
 double GeomProgression::getNth(int n) {
-    return frst * pow(base, n-1);
+    return frst * pow(r, n-1);
 }
