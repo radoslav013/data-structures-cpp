@@ -3,16 +3,6 @@
 // in inheritance hierarchy  that must include classes for 
 // arithmetic progression, geometric progression, and harmonic progression. 
 
-// Show polymorphism.
-/// Comments
-// Build&Run commands section
-// Illustrate with examples
-// Explain each progression type with Greek Sum and induction
-
-// FACTS:
-// Divergence indicates that two trends move further away from each other while convergence 
-// indicates how they move closer together.
-
 #include <iostream>
 
 using namespace std;

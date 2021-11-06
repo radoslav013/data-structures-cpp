@@ -12,7 +12,7 @@ double AritProgression::getNext() {
 
 // dummy
 void AritProgression::print(int n) {
-    cout << "I will never be executed..." << endl;
+    cout << "I will never be executed... SAD FACE" << endl;
 }
 
 // overriding the getNth from class Progression
