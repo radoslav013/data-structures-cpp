@@ -13,8 +13,8 @@ int main() {
     // list->addFront(8);
     // list->addFront(9);
     // list->addFront(10);
-    // list->addFront(11);
-    list->addFront(12);
+    list->addFront(11);
+    // list->addFront(12);
     // cout << list->frontValue() << endl;
     // cout << list->backValue() << endl;
 
@@ -24,7 +24,7 @@ int main() {
 
     list->print();
     cout << "Reversed: " << endl;
-    list->reverse();
+    list->reverse(list->getFront(), list->getBack());
     list->print();
 
     if(list){

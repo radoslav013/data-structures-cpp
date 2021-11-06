@@ -1,6 +1,10 @@
 #ifndef DOUBLY_LINKED_LIST
 #define DOUBLY_LINKED_LIST
 
+#include <iostream>
+
+using namespace std;
+
 template <typename E>
 class Node;
 
@@ -12,12 +16,13 @@ class DoublyLinkedList {
         bool empty() const; // checks if empty?
         const T& frontValue() const; // get value at the front 
         const T& backValue() const; // get value at the back
+        Node<T>* getFront() const;
+        Node<T>* getBack() const;
         void addFront(const T& value); // add to the front
         void addBack(const T& value); // add to the back
         void removeFront(); // remove from the front
         void removeBack(); // remove from the back
-        void reverse();
-        void swap(Node<T>* a, Node<T>* b);
+        void reverse(Node<T>* i, Node<T>* j);
         void print() const;
     private:
         Node<T>* head; //special node that holds the first dummy node
@@ -98,32 +103,23 @@ void DoublyLinkedList<T>::remove(Node<T>* v) {
 }
 
 template <typename T>
-void DoublyLinkedList<T>::reverse() {
-    Node<T>* current = head->next;
-    Node<T>* next;
+Node<T>* DoublyLinkedList<T>::getFront() const {
+    return head->next;
+}
 
-    head->next = next;
-    while(current->next != tail) {
-        Node<T>* prev = current->prev;
-        next = current->next;
-        // cout << "is head: " << (current->prev == head ? 1 : 0) << " ";
-        // cout << "current: " << current->value << " ";
-        // cout << "next: " << current->next->value << " ";
-        prev->next = next;
-        next->prev = prev;
-        next->next = current;
+template <typename T>
+Node<T>* DoublyLinkedList<T>::getBack() const {
+    return tail->prev;
+}
 
-        current->next = tail; // Wrong.
-        
-        current->prev = next;
-
-        // cout << endl;
+template <typename T>
+void DoublyLinkedList<T>::reverse(Node<T>* i, Node<T>* j) {
+    if(i != j && i->prev != j) {
+        T temp = i->value;
+        i->value = j->value;
+        j->value = temp;
+        reverse(i->next, j->prev);
     }
-
-    tail->prev = next;
-
-    // cout << "first: " << head->next->value << endl;
-    // cout << "second: " << head->next->next->value << endl;
 }
 
 template <typename T>
