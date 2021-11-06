@@ -16,13 +16,11 @@ class DoublyLinkedList {
         bool empty() const; // checks if empty?
         const T& frontValue() const; // get value at the front 
         const T& backValue() const; // get value at the back
-        Node<T>* getFront() const;
-        Node<T>* getBack() const;
         void addFront(const T& value); // add to the front
         void addBack(const T& value); // add to the back
         void removeFront(); // remove from the front
         void removeBack(); // remove from the back
-        void reverse(Node<T>* i, Node<T>* j);
+        void reverse();
         void print() const;
     private:
         Node<T>* head; //special node that holds the first dummy node
@@ -103,22 +101,17 @@ void DoublyLinkedList<T>::remove(Node<T>* v) {
 }
 
 template <typename T>
-Node<T>* DoublyLinkedList<T>::getFront() const {
-    return head->next;
-}
+void DoublyLinkedList<T>::reverse() {
+    Node<T>* i = head->next;
+    Node<T>* j = tail->prev;
 
-template <typename T>
-Node<T>* DoublyLinkedList<T>::getBack() const {
-    return tail->prev;
-}
-
-template <typename T>
-void DoublyLinkedList<T>::reverse(Node<T>* i, Node<T>* j) {
-    if(i != j && i->prev != j) {
+    while(i != j && i->prev != j) {
         T temp = i->value;
         i->value = j->value;
         j->value = temp;
-        reverse(i->next, j->prev);
+
+        i =i->next;
+        j = j->prev;
     }
 }
 
