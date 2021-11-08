@@ -8,15 +8,30 @@ using namespace std;
 
 int main() {
     CircularLinkedList<string>* list = new CircularLinkedList<string>();
-    list->add("five");
-    cout << list->back() << endl;
-    list->add("ten");
+    
+    int n = 0;
+    cout << "How many one-word strings would you like to enter: ";
+    cin >> n;
+    int i = 0;
+    while(i < n) {
+        string s;
+        cin >> s;
+        list->add(s);
+        i++;
+    }
+    
+    // list->add("brtz");
+    // list->add("asdf");
+    
+    // list->add("brty");
+    // list->add("zxcv");
+    // list->add("zxcz");
+    // list->add("erty");
+    
 
-    list->advance();
-    cout << list->back() << endl;
-    list->advance();
-    list->remove();
+    list->print();
+    list->sort();
+    list->print();
 
-    cout << list->back() << endl;
     return 0;
 }
