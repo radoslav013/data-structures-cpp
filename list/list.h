@@ -12,16 +12,22 @@ class NodeList {
     public:
         class Iterator {
             public:
+                Iterator();
+                Iterator(Node* u);
+                Iterator(const Iterator& u);
                 T& operator*();
                 bool operator ==(const Iterator& p) const;
                 bool operator !=(const Iterator& p) const;
+                Iterator& operator =(const Iterator& p);
                 Iterator& operator ++();
                 Iterator& operator --();
+                Iterator operator ++(T incr);
+                Iterator operator --(T decr);
 
                 friend class NodeList;
             private:
                 Node* v;
-                Iterator(Node* u);
+                void copy(const Iterator& u);
         };
     public:
         NodeList();
@@ -105,12 +111,12 @@ bool NodeList<T>::empty() const {
 
 template <typename T>
 typename NodeList<T>::Iterator NodeList<T>::begin() const {
-    return NodeList<T>::Iterator(header->next);
+    return Iterator(header->next);
 }
 
 template <typename T>
 typename NodeList<T>::Iterator NodeList<T>::end() const {
-    return NodeList<T>::Iterator(trailer);
+    return Iterator(trailer);
 }
 
 template <typename T>
@@ -123,9 +129,8 @@ void NodeList<T>::insertBack(const T& e) {
     insert(end(), e);
 }
 
-
 template <typename T>
-void NodeList<T>::insert(const NodeList<T>::Iterator& p, const T& e) {
+void NodeList<T>::insert(const Iterator& p, const T& e) {
     Node* w = p.v;
     Node* u = w->prev;
     Node* v = new Node;
@@ -146,7 +151,7 @@ void NodeList<T>::eraseBack() {
 }
 
 template <typename T>
-void NodeList<T>::erase(const typename NodeList<T>::Iterator& p) {
+void NodeList<T>::erase(const Iterator& p) {
     Node* v = p.v;
     Node* w = v->next;
     Node* u = v->prev;
@@ -154,13 +159,50 @@ void NodeList<T>::erase(const typename NodeList<T>::Iterator& p) {
     u->next = w;
     w->prev = u;
 
-    delete v;
+    delete v; // destructing the Node
     n--;
+}
+
+template <typename T>
+NodeList<T>::Iterator::Iterator() {
+    v = new Node();
 }
 
 template <typename T>
 NodeList<T>::Iterator::Iterator(Node* u) {
     v = u;
+}
+
+template <typename T>
+NodeList<T>::Iterator::Iterator(const Iterator& u) {
+    copy(u);
+}
+
+template <typename T>
+typename NodeList<T>::Iterator& NodeList<T>::Iterator::operator =(const Iterator& u) {
+    copy(u);
+    return *this;
+}
+
+template <typename T>
+void NodeList<T>::Iterator::copy(const Iterator& u) {
+    v = u.v;
+}
+
+template <typename T>
+typename NodeList<T>::Iterator NodeList<T>::Iterator::operator ++(T incr) {
+    Iterator r = *this;
+    v = v->next;
+
+    return r;
+}
+
+template <typename T>
+typename NodeList<T>::Iterator NodeList<T>::Iterator::operator --(T decr) {
+    Iterator r = *this;
+    v = v->prev;
+
+    return r;
 }
 
 template <typename T>

@@ -9,9 +9,14 @@ int main() {
     list.insertBack(5);
     list.insertBack(6);
 
-    NodeList<int> listB;
-    listB = list;
+    NodeList<int>::Iterator it = list.begin();
+    NodeList<int>::Iterator it2 = ++it;
 
-    cout << *(listB.begin()) << endl;
+    cout << *(it2) << endl;
+
+    // NodeList<int> listB;
+    // listB = list;
+
+    // cout << *(listB.begin()) << endl;
     return 0;
 }
