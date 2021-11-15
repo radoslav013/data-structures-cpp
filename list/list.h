@@ -19,10 +19,10 @@ class NodeList {
                 bool operator ==(const Iterator& p) const;
                 bool operator !=(const Iterator& p) const;
                 Iterator& operator =(const Iterator& p);
-                Iterator& operator ++();
-                Iterator& operator --();
-                Iterator operator ++(T incr);
-                Iterator operator --(T decr);
+                Iterator& operator ++(); // prefix
+                Iterator& operator --(); // prefix
+                Iterator operator ++(int); // postfix
+                Iterator operator --(int); // postfix
 
                 friend class NodeList;
             private:
@@ -190,17 +190,17 @@ void NodeList<T>::Iterator::copy(const Iterator& u) {
 }
 
 template <typename T>
-typename NodeList<T>::Iterator NodeList<T>::Iterator::operator ++(T incr) {
+typename NodeList<T>::Iterator NodeList<T>::Iterator::operator ++(int) {
     Iterator r = *this;
-    v = v->next;
+    ++*this;
 
     return r;
 }
 
 template <typename T>
-typename NodeList<T>::Iterator NodeList<T>::Iterator::operator --(T decr) {
+typename NodeList<T>::Iterator NodeList<T>::Iterator::operator --(int) {
     Iterator r = *this;
-    v = v->prev;
+    --*this;
 
     return r;
 }
