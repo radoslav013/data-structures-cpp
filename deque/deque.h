@@ -1,6 +1,9 @@
 #ifndef DEQUE_H
 #define DEQUE_H
 
+template <typename T>
+class Deque;
+
 #include "../doubly-linked-list/doubly-linked-list.h"
 #include "../doubly-linked-list/node.h"
 
@@ -9,6 +12,7 @@ class Deque {
     public:
         Deque();
         ~Deque();
+        Deque(const Deque<T>& d);
         bool empty() const;
         int size() const;
         const T& front() const;
@@ -17,9 +21,14 @@ class Deque {
         void insertBack(const T& el);
         void removeFront();
         void removeBack();
+        const Node<T>* getHead() const;
+        const Node<T>* getTail() const;
+        Deque &operator =(const Deque<T> &deq);
     private:
         DoublyLinkedList<T>* D;
         int n;
+        void free();
+        void copy(const Deque<T>& d);
 };
 
 template <typename T>
@@ -30,6 +39,37 @@ Deque<T>::Deque() {
 
 template <typename T>
 Deque<T>::~Deque() {
+    free();
+}
+
+template <typename T>
+Deque<T>::Deque(const Deque<T>& d) {
+    copy(d);
+}
+
+template <typename T>
+Deque<T> &Deque<T>::operator =(const Deque<T> &deq) {
+    if(this != &deq) {
+        free();
+        copy(deq);
+    }
+    return *this;
+}
+
+template <typename T>
+void Deque<T>::copy(const Deque<T>& d) {
+    D = new DoublyLinkedList<T>();
+    n = 0;
+
+    Node<T>* curr = d.getHead()->next;
+    while(curr != d.getTail()) {
+        D->addFront(curr->value);
+        curr = curr->next;
+    }
+}
+
+template <typename T>
+void Deque<T>::free() {
     if(D) {
         delete D;
         D = nullptr;
@@ -78,6 +118,16 @@ template <typename T>
 void Deque<T>::removeBack() {
     D->removeBack();
     n--;
+}
+
+template <typename T>
+const Node<T>* Deque<T>::getHead() const {
+    return D->getHead();
+}
+
+template <typename T>
+const Node<T>* Deque<T>::getTail() const {
+    return D->getTail();
 }
 
 #endif

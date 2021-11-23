@@ -22,6 +22,8 @@ class DoublyLinkedList {
         void removeBack(); // remove from the back
         void reverse();
         void print() const;
+        const Node<T>* getHead() const;
+        const Node<T>* getTail() const;
     private:
         Node<T>* head; //special node that holds the first dummy node
         Node<T>* tail; //special node that holds the last dummy node
@@ -123,6 +125,16 @@ void DoublyLinkedList<T>::print() const {
         curr = curr->next;
     }
     cout << endl;
+}
+
+template <typename T>
+const Node<T>* DoublyLinkedList<T>::getHead() const {
+    return head;
+}
+
+template <typename T>
+const Node<T>* DoublyLinkedList<T>::getTail() const {
+    return tail;
 }
 
 #endif

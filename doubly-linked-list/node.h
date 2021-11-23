@@ -9,6 +9,7 @@ class Node {
         Node<E>* next;
 
         friend class DoublyLinkedList<E>;
+        friend class Deque<E>;
 };
 
 #endif
