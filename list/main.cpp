@@ -33,16 +33,16 @@ int main() {
 
     ArraySequence a;
     
-    a.insertBack(9);
-    a.insertBack(10);
-    a.insertBack(11);
+    a.insertFront(9);
+    // a.insertBack(10);
+    // a.insertBack(11);
     a.insertFront(7);
-    a.insertBack(8);
+    // a.insertBack(8);
 
     a.print();
     cout << "---------" << endl;
-    a.eraseFront();
-    a.eraseBack();
+    // a.eraseFront();
+    // a.eraseBack();
     a.print();
 
     return 0;

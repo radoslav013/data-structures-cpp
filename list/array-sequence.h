@@ -5,6 +5,9 @@
 
 using namespace std;
 
+#include "sequence-empty.h"
+#include "sequence-full.h"
+
 class ArraySequence {
     private:
         struct Pair {
@@ -105,19 +108,18 @@ void ArraySequence::insertBack(int e) {
 }
 
 void ArraySequence::insert(const Iterator& it, int e) {
-    int indx = indexOf(it);
     Pair toInsert;
     toInsert.e = e;
-    toInsert.i = indx;
+    toInsert.i = it.el->i;
 
     int curr = r;
-    while(curr != indx) {
+    while(curr > it.el->i) {
         A[curr] = A[curr-1];
         A[curr].i = curr;
         --curr;
     }
 
-    A[indx] = toInsert;
+    A[it.el->i] = toInsert;
     n++;
     r++;
 }
@@ -139,17 +141,21 @@ void ArraySequence::eraseBack() {
 }
 
 void ArraySequence::erase(const Iterator& it) {
-    int indx = indexOf(it);
+    if(!empty()) {
+        int indx = indexOf(it);
 
-    int curr = indx;
-    while(curr != r) {
-        A[curr] = A[curr+1];
-        A[curr].i = curr;
-        ++curr;
+        int curr = indx;
+        while(curr < r) {
+            A[curr] = A[curr+1];
+            A[curr].i = curr;
+            ++curr;
+        }
+
+        n--;
+        r--;
+    } else {
+        throw SequenceEmpty("The sequence is empty already!");
     }
-
-    n--;
-    r--;
 }
 
 void ArraySequence::free() {
@@ -158,7 +164,6 @@ void ArraySequence::free() {
         A = nullptr;
     }
 }
-
 
 // Iterator
 ArraySequence::Iterator::Iterator(const ArraySequence* o) {
