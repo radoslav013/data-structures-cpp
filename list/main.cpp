@@ -5,6 +5,7 @@ using namespace std;
 // #include "list.h"
 // #include "node-sequence.h"
 #include "array-sequence.h"
+#include "circular-array-sequence.h"
 
 int main() {
     // NodeList<int> list;
@@ -31,19 +32,31 @@ int main() {
     // NodeSequence<int>::Iterator it3 = ++nodeList.begin();
     // cout << nodeList.indexOf(it3) << endl;
 
-    ArraySequence a;
+    // ArraySequence a;
     
-    a.insertFront(9);
-    // a.insertBack(10);
-    // a.insertBack(11);
-    a.insertFront(7);
-    // a.insertBack(8);
+    // a.insertFront(9);
+    // // a.insertBack(10);
+    // // a.insertBack(11);
+    // a.insertFront(7);
+    // // a.insertBack(8);
 
-    a.print();
-    cout << "---------" << endl;
-    // a.eraseFront();
-    // a.eraseBack();
-    a.print();
+    // a.print();
+    // cout << "---------" << endl;
+    // // a.eraseFront();
+    // // a.eraseBack();
+    // a.print();
 
+    CircularArraySequence ca;
+    ca.insertFront(23);
+    ca.insertBack(24);
+    ca.insertBack(25);
+    ca.insertFront(22);
+    ca.insertBack(26);
+
+    ca.print();
+    cout << "--------------" << endl;
+    ca.eraseFront();
+
+    ca.print();
     return 0;
 }

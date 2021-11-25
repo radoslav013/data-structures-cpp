@@ -9,7 +9,7 @@ using namespace std;
 #include "sequence-full.h"
 
 class ArraySequence {
-    private:
+    protected:
         struct Pair {
             int i;
             int e;
@@ -30,28 +30,28 @@ class ArraySequence {
                 Iterator operator --(int); // postfix
 
                 friend class ArraySequence;
-            private:
+            protected:
                 Pair* el;
                 const ArraySequence* outer;
                 void copy(const Iterator& u);
         };
     public:
         ArraySequence();
-        ~ArraySequence();
+        virtual ~ArraySequence();
         int size() const;
         bool empty() const;
         Iterator atIndex(int i) const;
         int indexOf(const Iterator& it) const;
         Iterator begin() const;
         Iterator end() const;
-        void insertFront(int e);
-        void insertBack(int e);
-        void insert(const Iterator& it, int e);
-        void eraseFront();
-        void eraseBack();
-        void erase(const Iterator& it);
+        virtual void insertFront(int e);
+        virtual void insertBack(int e);
+        virtual void insert(const Iterator& it, int e);
+        virtual void eraseFront();
+        virtual void eraseBack();
+        virtual void erase(const Iterator& it);
         void print() const;
-    private:
+    protected:
         Pair* A;
         int n; // size of sequence
         int f; // index of first element
