@@ -54,4 +54,5 @@ template <typename T>
 const T& AStack<T>::top() const {
     return arr[indx_top];
 }
+
 #endif
