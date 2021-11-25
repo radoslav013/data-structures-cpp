@@ -9,6 +9,11 @@ int main() {
     aq.enqueue(12);
     aq.enqueue(13);
     aq.enqueue(15);
-    cout << aq.front() << endl;
+
+    AQueue<int> aq2(aq);
+    cout << aq2.front() << endl;
+
+    AQueue<int> aq3 = aq;
+    cout << aq3.front() << endl;
     return 0;
 }
