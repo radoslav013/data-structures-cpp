@@ -8,8 +8,6 @@ template <typename T>
 class LQueue : protected LinkedList<T> {
     public:
         LQueue() : LinkedList<T>() {};
-        int size() const;
-        bool empty() const;
         void enqueue(const T& el);
         void dequeue();
         const T& top() const;

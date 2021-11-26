@@ -7,8 +7,6 @@ template <typename T>
 class DStack : protected Deque<T> {
     public:
         DStack() : Deque<T>() {};
-        int size() const;
-        bool empty() const;
         void push(const T& el);
         void pop();
         const T& top() const;

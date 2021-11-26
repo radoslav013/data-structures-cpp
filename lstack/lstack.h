@@ -8,8 +8,6 @@ template <typename T>
 class LStack : protected LinkedList<T> {
     public:
         LStack() : LinkedList<T>() {};
-        int size() const;
-        bool empty() const;
         void push(const T& el);
         void pop();
         const T& top() const;

@@ -7,8 +7,6 @@ template <typename T>
 class DQueue : protected Deque<T> {
     public:
         DQueue() : Deque<T>() {};
-        int size() const;
-        bool empty() const;
         void enqueue(const T& el);
         void dequeue();
         const T& top() const;

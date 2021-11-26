@@ -8,8 +8,6 @@ template <typename T>
 class CLQueue : protected CircularLinkedList<T> {
     public:
         CLQueue() : CircularLinkedList<T>() {};
-        int size() const;
-        bool empty() const;
         void enqueue(const T& el);
         void dequeue();
         const T& top() const;
