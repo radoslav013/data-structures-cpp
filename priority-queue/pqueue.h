@@ -1,9 +1,10 @@
-#ifndef PRIORITY_QUEUE
-#define PRIORITY_QUEUE
+#ifndef PRIORITY_QUEUE_H
+#define PRIORITY_QUEUE_H
 
 #include <iostream>
 #include <stdexcept>
-#include <list>
+
+#include "list.h"
 
 using namespace std;
 
@@ -15,6 +16,11 @@ class PQueueExcpt : public runtime_error {
 template <typename Tk, typename Tv>
 class ListPriorityQueue {
     public:
+        struct LPNode {
+            Tk key;
+            Tv value;
+        };
+    public:
         ListPriorityQueue() {}; // default contructor
         ~ListPriorityQueue(); // desctructor
         ListPriorityQueue(const ListPriorityQueue<Tk, Tv>& pq); // copy constructor
@@ -25,13 +31,13 @@ class ListPriorityQueue {
         const Tv& min() const; // returns the minimum value based on the prioritisation
         void removeMin(); // removes the element returned by min()
     private:
-        list<pair<Tk, Tv>> L; // std::list, for keeping the elements.
+        NodeList<LPNode> L; // std::list custom, for keeping the elements.
         void copy(const ListPriorityQueue<Tk, Tv>& pq); // copies all elements from on priority queue to another
 };
 
 template <typename Tk, typename Tv>
 ListPriorityQueue<Tk, Tv>::~ListPriorityQueue() {
-    L.~list<pair<Tk, Tv>>();
+    L.~NodeList<LPNode>();
 } // destructor
 
 template <typename Tk, typename Tv>
@@ -61,17 +67,20 @@ bool ListPriorityQueue<Tk, Tv>::empty() const {
 
 template <typename Tk, typename Tv>
 void ListPriorityQueue<Tk, Tv>::insert(const Tk& k, const Tv& v) {
-    typename list<pair<Tk, Tv>>::iterator p;
+    typename NodeList<LPNode>::Iterator p;
     p = L.begin();
-    while(p != L.end() && k > (*p).first) ++p;
-    pair<Tk, Tv> toInsert(k, v);
-    L.insert(p, toInsert);
+    while(p != L.end() && k > (*p).key) ++p;
+    LPNode lpnode;
+    lpnode.key = k;
+    lpnode.value = v;
+    L.insert(p, lpnode);
 } // insert
 
 template <typename Tk, typename Tv>
 const Tv& ListPriorityQueue<Tk, Tv>::min() const {
     if(!empty()) {
-        return L.front().second;
+        typename NodeList<LPNode>::Iterator s = L.begin();
+        return (*s).value;
     }
     throw PQueueExcpt("Priority queue is empty");
 } // returns min

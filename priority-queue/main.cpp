@@ -37,6 +37,7 @@ int main() {
     ListPriorityQueue<string, int> pq3;
     pq3.insert("a", 0);
     pq3.insert("z", 26);
+    pq3.insert("0", 13);
     cout << "Size of pq3: " << pq3.size() << endl;
     cout << "Min of pq3: " << pq3.min() << endl;
 
