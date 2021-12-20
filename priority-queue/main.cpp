@@ -5,7 +5,6 @@ using namespace std;
 
 #include "pqueue.h"
 
-
 int main() {
     ListPriorityQueue<int, int> pq;
     pq.insert(1, 12);
