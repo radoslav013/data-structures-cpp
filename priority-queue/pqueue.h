@@ -79,6 +79,7 @@ void ListPriorityQueue<Tk, Tv>::insert(const Tk& k, const Tv& v) {
 
 template <typename Tk, typename Tv>
 const Tv& ListPriorityQueue<Tk, Tv>::min() const {
+    // return the first if not empty
     if(!empty()) {
         typename NodeList<LPNode>::Iterator s = L.begin();
         return (*s).value;
@@ -88,6 +89,7 @@ const Tv& ListPriorityQueue<Tk, Tv>::min() const {
 
 template <typename Tk, typename Tv>
 void ListPriorityQueue<Tk, Tv>::removeMin() {
+    // remove min if not empty
     if(!empty()) {
         L.pop_front();
     } else {
