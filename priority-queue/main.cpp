@@ -41,5 +41,10 @@ int main() {
     cout << "Size of pq3: " << pq3.size() << endl;
     cout << "Min of pq3: " << pq3.min() << endl;
 
+    // cout << "---------------------" << endl;
+
+    // ListPriorityQueue<string, int> pq4;
+    // pq4.removeMin();
+
     return 0;
 }

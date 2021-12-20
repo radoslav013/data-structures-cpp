@@ -5,51 +5,51 @@ template <typename T>
 class NodeList {
     private:
         struct Node {
-            T elem;
-            Node* prev;
-            Node* next;
+            T elem; // value
+            Node* prev; // pointer to previous element
+            Node* next; // pointer to next element
         };
     public:
         class Iterator {
             public:
-                Iterator();
-                Iterator(Node* u);
-                Iterator(const Iterator& u);
-                T& operator*();
-                bool operator ==(const Iterator& p) const;
-                bool operator !=(const Iterator& p) const;
+                Iterator(); // constructor
+                Iterator(Node* u); // constructor with existing node
+                Iterator(const Iterator& u); // copy constructor
+                T& operator*(); // reference to the element
+                bool operator ==(const Iterator& p) const; // comparison operator overloaded
+                bool operator !=(const Iterator& p) const; // negative comparison operator overloaded
                 Iterator& operator =(const Iterator& p);
-                Iterator& operator ++(); // prefix
-                Iterator& operator --(); // prefix
-                Iterator operator ++(int); // postfix
-                Iterator operator --(int); // postfix
+                Iterator& operator ++(); // prefix increment
+                Iterator& operator --(); // prefix decrement
+                Iterator operator ++(int); // postfix increment
+                Iterator operator --(int); // postfix decrement
 
-                friend class NodeList;
+                friend class NodeList; // allow NodeList to access all properties of this class
             private:
-                Node* v;
-                void copy(const Iterator& u);
+                Node* v; // pointer to node
+                void copy(const Iterator& u); // copy object
         };
     public:
-        NodeList();
-        ~NodeList();
-        NodeList(const NodeList<T>& b);
-        int size() const;
-        bool empty() const;
-        Iterator begin() const;
-        Iterator end() const;
-        void push_front(const T& e);
-        void push_back(const T& e);
-        void insert(const Iterator& p, const T& e);
-        void pop_front();
-        void pop_back();
-        void erase(const Iterator& p);
-        NodeList& operator =(const NodeList<T>& b);
+        NodeList(); // constructor
+        ~NodeList(); // desctructor
+        NodeList(const NodeList<T>& b); // copy constructor
+        NodeList& operator =(const NodeList<T>& b); // assignment operator overloaded
+        int size() const; // return size
+        bool empty() const; // return boolean whether empty
+        Iterator begin() const; // iterator of the position next to header
+        Iterator end() const; // iterator of the position previous to trailer
+        void push_front(const T& e); // push to the front
+        void push_back(const T& e); // push to the back
+        void push(const Iterator& p, const T& e); // push element on a specifiv position
+        void pop_front(); // pop first element
+        void pop_back(); // pop last element
+        void pop(const Iterator& p); // pop element on a specific position
     private: 
-        int n;
-        Node* header;
-        Node* trailer;
-        void copy(const NodeList<T>& b);
-        void free();
+        int n; // keeps track of the size of the element
+        Node* header; // pointer to the header
+        Node* trailer; // pointer to the trailer
+        void copy(const NodeList<T>& b); // copy object
+        void free(); // free object
 };
 
 template <typename T>
@@ -69,6 +69,7 @@ NodeList<T>::~NodeList() {
 
 template <typename T>
 NodeList<T>::NodeList(const NodeList<T>& b) {
+    // copy the static properties
     n = b.n;
     header = b.header;
     trailer = b.trailer;
@@ -87,6 +88,7 @@ NodeList<T>& NodeList<T>::operator =(const NodeList<T>& b) {
 
 template <typename T>
 void NodeList<T>::copy(const NodeList<T>& b) {
+    // copies all elements from one list to another
     for(NodeList<T>::Iterator it = b.begin(); it != b.end(); ++it) {
         push_back(*it);
     }
@@ -94,6 +96,7 @@ void NodeList<T>::copy(const NodeList<T>& b) {
 
 template <typename T>
 void NodeList<T>::free() {
+    // pops all elements
     while(!empty()) {
         pop_back();
     }
@@ -121,16 +124,17 @@ typename NodeList<T>::Iterator NodeList<T>::end() const {
 
 template <typename T>
 void NodeList<T>::push_front(const T& e) {
-    insert(begin(), e);
+    push(begin(), e);
 }
 
 template <typename T>
 void NodeList<T>::push_back(const T& e) {
-    insert(end(), e);
+    push(end(), e);
 }
 
 template <typename T>
-void NodeList<T>::insert(const Iterator& p, const T& e) {
+void NodeList<T>::push(const Iterator& p, const T& e) {
+    // link the new element between the positions
     Node* w = p.v;
     Node* u = w->prev;
     Node* v = new Node;
@@ -142,16 +146,17 @@ void NodeList<T>::insert(const Iterator& p, const T& e) {
 
 template <typename T>
 void NodeList<T>::pop_front() {
-    erase(begin());
+    pop(begin());
 }
 
 template <typename T>
 void NodeList<T>::pop_back() {
-    erase(--end());
+    pop(--end());
 }
 
 template <typename T>
-void NodeList<T>::erase(const Iterator& p) {
+void NodeList<T>::pop(const Iterator& p) {
+    // link out element on p position
     Node* v = p.v;
     Node* w = v->next;
     Node* u = v->prev;
@@ -191,6 +196,7 @@ void NodeList<T>::Iterator::copy(const Iterator& u) {
 
 template <typename T>
 typename NodeList<T>::Iterator NodeList<T>::Iterator::operator ++(int) {
+    // return and then move to next
     Iterator r = *this;
     ++*this;
 
@@ -199,6 +205,7 @@ typename NodeList<T>::Iterator NodeList<T>::Iterator::operator ++(int) {
 
 template <typename T>
 typename NodeList<T>::Iterator NodeList<T>::Iterator::operator --(int) {
+    // return and then move to previous
     Iterator r = *this;
     --*this;
 
@@ -217,17 +224,20 @@ bool NodeList<T>::Iterator::operator ==(const Iterator& p) const {
 
 template <typename T>
 bool NodeList<T>::Iterator::operator !=(const Iterator& p) const {
+    // compares only the value
     return p.v != v;
 }
 
 template <typename T>
 typename NodeList<T>::Iterator& NodeList<T>::Iterator::operator ++() {
+    // moves to the next and then returns (prefix)
     v = v->next;
     return *this;
 }
 
 template <typename T>
 typename NodeList<T>::Iterator& NodeList<T>::Iterator::operator --() {
+    // moves to the previous and then returns (prefix)
     v = v->prev;
     return *this;
 }
