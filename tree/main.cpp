@@ -5,7 +5,7 @@ using namespace std;
 
 // #include "gtree.h"
 #include "linked-binary-tree.h"
-#include "linked-binary-search-tree.h"
+// #include "linked-binary-search-tree.h"
 
 int main() {
     // GTree<int> tree;
@@ -30,24 +30,37 @@ int main() {
 
     // tree.print();
 
-    // LinkedBinaryTree<int> btree;
-    // btree.setRoot(0);
-    // LinkedBinaryTree<int>::Position pos = btree.getRoot();
-    // btree.setLeft(pos, -1);
-    // btree.setRight(pos, 1);
-    // pos = pos.getLeft();
-    // btree.setLeft(pos, -2);
-    // btree.setRight(pos, 2);
-    // btree.print();
-    // cout << "--------------------" << endl;
+    LinkedBinaryTree<int> btree;
+    btree.setRoot(20);
+    LinkedBinaryTree<int>::Position root = btree.getRoot();
+    btree.setLeft(root, 10);
+    btree.setRight(root, 26);
+    LinkedBinaryTree<int>::Position left = root.getLeft();
+    btree.setLeft(left, 4);
+    btree.setRight(left, 18);
+    LinkedBinaryTree<int>::Position leftright = left.getRight();
+    btree.setLeft(leftright, 14);
+    btree.setRight(leftright, 19);
+    LinkedBinaryTree<int>::Position leftrightleft = leftright.getLeft();
+    btree.setLeft(leftrightleft, 13);
+    btree.setRight(leftrightleft, 15);
+    LinkedBinaryTree<int>::Position right = root.getRight();
+    btree.setLeft(right, 24);
+    btree.setRight(right, 27);
+    
+    btree.print();
+    cout << "--------------------" << endl;
+    LinkedBinaryTree<int>::Position test = left.getLeft();
+    cout << *test << endl;
+    cout << *btree.postorderNext(test) << endl;
     // btree.eulerTour();
 
-    LinkedBinarySearchTree<int> bstree;
-    bstree.insert(8);
-    bstree.insert(10);
-    bstree.insert(3);
-    bstree.insert(1);
-    bstree.print();
+    // LinkedBinarySearchTree<int> bstree;
+    // bstree.insert(8);
+    // bstree.insert(10);
+    // bstree.insert(3);
+    // bstree.insert(1);
+    // bstree.print();
     // LinkedBinarySearchTree<int> bstree1;
     // bstree1 = bstree;
 

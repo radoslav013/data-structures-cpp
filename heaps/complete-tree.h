@@ -10,7 +10,7 @@ class VectorCompleteTree {
     public:
         typedef typename vector<T>::iterator Position;
     protected:
-        Position pos(int i) { return V.begin() + 1; }
+        Position pos(int i) { return V.begin() + i; }
         int idx(const Position& p) const { return p - V.begin(); }
     private:
         vector<T> V;
@@ -19,7 +19,7 @@ class VectorCompleteTree {
         int size() const { return V.size() - 1; }
         Position left(const Position& p) { return pos(2*idx(p)); }
         Position right(const Position& p) { return pos(2*idx(p) + 1); }
-        Position parent(const Position& p) { return pos(2*idx(p)/2); }
+        Position parent(const Position& p) { return pos(idx(p)/2); }
         bool hasLeft(const Position& p) const { return 2*idx(p) <= size(); }
         bool hasRight(const Position& p) const { return 2*idx(p) + 1 <= size(); }
         bool isRoot(const Position& p) const { return idx(p) == 1; }

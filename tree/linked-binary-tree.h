@@ -31,6 +31,7 @@ class LinkedBinaryTree {
                 Position(const Position& pos);
                 Position& operator =(const Position& pos);
                 T& operator*();
+                const T& getValue() const;
                 bool isRoot() const;
                 bool isExternal() const;
                 Position parent() const;
@@ -63,6 +64,8 @@ class LinkedBinaryTree {
         void setRight(const Position& pos, const T& key);
         void eulerTour();
         void eulerTour(Node* node);
+        Position preorderNext(const Position& pos);
+        Position postorderNext(const Position& pos);
     protected:
         Node* root;
         int n;
@@ -234,6 +237,44 @@ int LinkedBinaryTree<T>::depth(const Position& pos) const {
 }
 
 template <typename T>
+typename LinkedBinaryTree<T>::Position LinkedBinaryTree<T>::preorderNext(const Position& pos) {
+    if (pos.getLeft().node) {
+        return pos.getLeft();
+    } else if(pos.parent().getLeft().node == pos.node) {
+        return pos.parent().getRight();
+    } else {
+        Position curr = pos.parent();
+        while(true) {
+            if(curr.node == root) {
+                throw TreeExcept("No Successor of this element");
+            } else if(curr.parent().getLeft().node == curr.node) {
+                return curr.parent().getRight();
+            }
+            curr = curr.parent();
+        }
+    }
+}
+
+template <typename T>
+typename LinkedBinaryTree<T>::Position LinkedBinaryTree<T>::postorderNext(const Position& pos) {
+    if(pos.node == root) {
+        throw TreeExcept("No Successor of this element");
+    } else if(pos.node == pos.parent().getRight().node) {
+        return pos.parent();
+    } else {
+        if(pos.parent().getRight().getLeft().node) {
+            Position curr = pos.parent().getRight().getLeft();
+            while(curr.getLeft().node) {
+                curr = curr.getLeft();
+            }
+            return curr;
+        } else {
+            return pos.parent().getRight();
+        }
+    }
+}
+
+template <typename T>
 LinkedBinaryTree<T>::LinkedBinaryTree(const LinkedBinaryTree& tree) {
     copy(tree);
 }
@@ -334,6 +375,14 @@ void LinkedBinaryTree<T>::setRight(const typename LinkedBinaryTree<T>::Position&
 
 template <typename T>
 T& LinkedBinaryTree<T>::Position::operator *() {
+    if(!node) {
+        throw TreeExcept("Dereference null position");
+    }
+    return node->key;
+}
+
+template <typename T>
+const T& LinkedBinaryTree<T>::Position::getValue() const {
     if(!node) {
         throw TreeExcept("Dereference null position");
     }
