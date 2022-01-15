@@ -19,9 +19,9 @@ class HashDict : public HashMap<K, V, H> {
                 Iterator& end() { return _end; }
         };
     public:
-    HashDict(int capacity = 100) : HashMap<K, V, H>(capacity) {}
-    Range findAll(const K& k);
-    Iterator insert(const K& k, const V& v);
+        HashDict(int capacity = 100) : HashMap<K, V, H>(capacity) {}
+        Range findAll(const K& k);
+        Iterator insert(const K& k, const V& v);
 };
 
 template <typename K, typename V, typename H>
