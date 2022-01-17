@@ -3,10 +3,16 @@
 
 #include <iostream>
 #include <list>
+#include <stdexcept>
 
 using namespace std;
 
 #include "../hashmap/entry.h"
+
+class MapExcpt : public runtime_error {
+    public:
+        MapExcpt(const string& msg) : runtime_error(msg) {}
+};
 
 template <typename K, typename V>
 class Map {
@@ -15,7 +21,7 @@ class Map {
         typedef list<Entry> List;
         typedef typename List::iterator Iterator; // an iterator (and position)
     public:
-        int size() const { return n; } // number of entries in the map
+        int size() const { return L.size(); } // number of entries in the map
         bool empty() const { return size() == 0; } // is the map empty?
         Iterator find(const K& k); // find entry with key k
         Iterator put(const K& k, const V& v); // insert/replace pair (k,v)
@@ -25,49 +31,60 @@ class Map {
         Iterator end() { return L.end(); }
     private:
         List L;
-        int n;
 };
 
 template <typename K, typename V>
 typename Map<K, V>::Iterator Map<K, V>::find(const K& k) {
-    for(Iterator it = begin(); it != end(); ++it) {
-        if((*it).key() == k) {
-            return it;
+    Iterator result;
+    for(result = begin(); result != end(); ++result) {
+        if(result->key() == k) {
+            break;
         }
     }
-    throw runtime_error("No key found");
+    return result;
 }
 
 template <typename K, typename V>
 typename Map<K, V>::Iterator Map<K, V>::put(const K& k, const V& v) {
-    for(Iterator it = begin(); it != end(); ++it) {
-        if((*it).key() == k) {
-            (*it).setValue(v);
-            return it;
+    bool found = false;
+    Iterator result;
+    for(result = begin(); !found && result != end(); ++result) {
+        if(result->key() == k) {
+            result->setValue(v);
+            found = true;
         }
     }
-    Entry ent(k, v);
-    L.push_back(ent);
-    n++;
+    if(!found) {
+        Entry ent(k, v);
+        L.push_back(ent);
+        result = L.end();
 
-    Iterator added = end();
-    return --added;
+        --result;
+    }
+    return result;
 }
 
 template <typename K, typename V>
 void Map<K, V>::erase(const K& k) {
-    for(Iterator it = begin(); it != end(); ++it) {
-        if((*it).key() == k) {
+    bool found = false;
+    for(Iterator it = begin(); it != end() && !found; ++it) {
+        if(it->key() == k) {
+            found = true;
             L.erase(it);
-            --n;
         }
+    }
+    if(!found) {
+        throw MapExcpt("Attempted to remove a non-existent key");
     }
 }
 
 template <typename K, typename V>
 void Map<K, V>::erase(const Iterator& p) {
+    if(p == L.end()) {
+        throw MapExcpt("Attempted to remove the end position");
+    }
     L.erase(p);
-    --n;
+    p = L.end();
 }
 
 #endif
