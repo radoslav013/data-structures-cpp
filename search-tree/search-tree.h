@@ -124,6 +124,11 @@ void SearchTree<E>::erase(const K& k) {
 
 template <typename E>
 void SearchTree<E>::erase(const Iterator& p) {
-    eraser(p.v);
+    erase(p.v);
+}
+
+template <typename E>
+typename SearchTree<E>::TPos SearchTree<E>::restructure(const TPos& v) {
+
 }
 #endif
