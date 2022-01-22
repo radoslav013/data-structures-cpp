@@ -3,10 +3,16 @@
 
 #include <iostream>
 #include <vector>
+#include <stdexcept>
 #include <time.h>
 
 template <typename E>
 class SkipList;
+
+class SkipListExcpt : public runtime_error {
+    public:
+        SkipListExcpt(const string& msg) : runtime_error(msg) {}
+};
 
 #include "skip-list-entry.h"
 
@@ -23,7 +29,7 @@ class SkipList {
         Iterator find(const K& k); // find entry with key k
         Iterator put(const K& k, const V& v); // insert/replace pair (k,v)
         void erase(const K& k); // remove entry with key k
-        void erase(const Iterator p); // erase entry at p
+        void erase(const Iterator& p); // erase entry at p
 
         Iterator begin() const { return Iterator(header); } // pointer to first entry
 
@@ -117,14 +123,15 @@ typename SkipList<E>::Iterator SkipList<E>::find(const K& k) {
     if(s.exist() && s->key() == k) {
         return s;
     } else {
-        throw runtime_error("No element with this key"); // TODO: custom exception
+        throw SkipListExcpt("No element with this key"); // TODO: custom exception
         return nullptr;
     }
 }
 
 template <typename E>
-void SkipList<E>::erase(const Iterator p) {
-    erase(p->key);
+void SkipList<E>::erase(const Iterator& p) {
+    Iterator s = p;
+    erase(s->key());
 }
 
 template <typename E>
@@ -146,7 +153,7 @@ void SkipList<E>::erase(const K& k) {
     }
     s = s->next[0]; // TODO: after()
 
-   if(s != nullptr || s->key() == k) {
+   if(s.exist() && s->key() == k) {
         for(int i = 0; i <= lvl; i++) {
             if(toUpdateAfter[i]->next[i] != s) {
                 break;
@@ -159,6 +166,8 @@ void SkipList<E>::erase(const K& k) {
            --lvl;
         }
         --n;
+    } else {
+        throw SkipListExcpt("No element found to delete.");
     }
 }
 
@@ -184,7 +193,7 @@ typename SkipList<E>::Iterator SkipList<E>::put(const K& k, const V& v) {
     Iterator newNode;
 
     // insert new only if there is no key k already
-    if(s == nullptr || s->key() != k) {
+    if(!s.exist() || s->key() != k) {
         int newLevel = randomLevel(); // TODO: use flip coin
 
         if(newLevel > lvl) {
@@ -278,42 +287,4 @@ template <typename E>
 bool SkipList<E>::Iterator::exist() const {
     return v != nullptr;
 }
-/*
-
-template <typename E>
-typename SkipList<E>::SLEntry* SkipList<E>::after(const SLEntry* p) {
-    if(p->lvl < p->next.size()) {
-        return p->next[p->lvl];
-    } else {
-       return nullptr;
-    }
-}
-
-template <typename E>
-typename SkipList<E>::SLEntry* SkipList<E>::below(const SLEntry* p) {
-    if(p->lvl > 0) {
-        return p->prev->next[p->lvl-1];
-    } else {
-        return nullptr;
-    }
-}
-
-template <typename E>
-typename SkipList<E>::SLEntry* SkipList<E>::above(const SLEntry* p) {
-    // if(p->lvl < p->prev->next.size()-1) {
-    //     return p->prev->next[++p->lvl];
-    // } else {
-    //     throw runtime_error("There is no above!");
-    // }
-}
-
-template <typename E>
-typename SkipList<E>::SLEntry* SkipList<E>::before(const SLEntry* p) {
-    // if(p->lvl < p->prev->prev->next.size()) {
-    //     return p->prev->prev->next[p->lvl];
-    // } else {
-    //     throw runtime_error("There is no before!");
-    // }
-}
-*/
 #endif
