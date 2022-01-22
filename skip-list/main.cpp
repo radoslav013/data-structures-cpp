@@ -4,9 +4,10 @@
 using namespace std;
 
 #include "skip-list.h"
+#include "entry.h"
 
 int main() {
-    SkipList<int, string> sl;
+    SkipList< Entry<int, string> > sl;
     // cout << sl.flipCoin() << endl;
     sl.put(1, "Rado");
     sl.put(2, "Ivan");

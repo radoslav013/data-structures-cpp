@@ -3,10 +3,13 @@
 
 template <typename K, typename V>
 class Entry {
+    protected:
+        typedef K Key; // key type
+        typedef V Value; // value type
     public:
         Entry(const K& k = K(), const V& v = V()) : _key(k), _value(v) {}
-        K& key() const { return _key; }
-        V& value() const { return _value; }
+        const K& key() const { return _key; }
+        const V& value() const { return _value; }
         void setKey(const K& k) { _key = k; }
         void setValue(const V& v) { _value = v; }
 

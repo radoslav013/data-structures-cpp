@@ -5,36 +5,28 @@
 #include <vector>
 #include <time.h>
 
-// #include "entry.h"
+template <typename E>
+class SkipList;
 
-template <typename K, typename V>
+#include "skip-list-entry.h"
+
+template <typename E>
 class SkipList {
-    private:
-        class Node {
-            public:
-                Node(int l) : next(l) {}
-                Node(const K& k, const V& v, int l) : key(k), val(v), next(l+1) {}
-
-                K key; V val;
-                vector<Node*> next; // vector with pointers to next node vertically
-        };
+    protected:
+        typedef SLEntry<E> SLEntry; // an entry
     public:
-        // typedef Entry<K, V> Entry; // a (key,value) pair // TODO
+        typedef typename SLEntry::Key K; // a key
+        typedef typename SLEntry::Value V; // a value
         // class Iterator;
     public:
-        SkipList() : header(new Node(MAXLVL)), n(0), lvl(0) { srand((unsigned)time(0)); } // random reset seed
+        SkipList() : header(new SLEntry(MAXLVL)), n(0), lvl(0) { srand((unsigned)time(0)); } // random reset seed
         ~SkipList();
-        Node* find(const K& k); // find entry with key k
-        Node* put(const K& k, const V& v); // insert/replace pair (k,v)
+        SLEntry* find(const K& k); // find entry with key k
+        SLEntry* put(const K& k, const V& v); // insert/replace pair (k,v)
         void erase(const K& k); // remove entry with key k
-        void erase(const Node* p); // erase entry at p
+        void erase(const SLEntry* p); // erase entry at p
 
-        Node* begin() const { return header; } // pointer to first entry
-
-        Node* above(const Node* p);
-        Node* below(const Node* p);
-        Node* after(const Node* p);
-        Node* before(const Node* p);
+        SLEntry* begin() const { return header; } // pointer to first entry
 
         // utilities
         int size() const { return n; }
@@ -47,14 +39,14 @@ class SkipList {
         const float P = 0.5; // TODO: see what is the best
         int lvl;
         int n;
-        Node* header;
-        void copy(const SkipList<K, V>& b);
+        SLEntry* header;
+        void copy(const SkipList& b);
         void free();
     public:
         // class Iterator {
         //     public:
         //         Iterator();
-        //         Iterator(Node* u);
+        //         Iterator(SLEntry* u);
         //         Iterator(const Iterator& u);
         //         K& operator*();
         //         bool operator ==(const Iterator& p) const;
@@ -62,21 +54,21 @@ class SkipList {
         //         Iterator& operator =(const Iterator& p);
         //         friend class SkipList;
         //     private:
-        //         Node* v;
+        //         SLEntry* v;
         //         void copy(const Iterator& u);
         // };
 };
 
-template <typename K, typename V>
-SkipList<K, V>::~SkipList() {
+template <typename E>
+SkipList<E>::~SkipList() {
     if(header) {
         delete header;
     }
     // TODO: delete vector of pointers next
 }
 
-template <typename K, typename V>
-int SkipList<K, V>::randomLevel() const {
+template <typename E>
+int SkipList<E>::randomLevel() const {
     float r = (float)rand()/RAND_MAX;
 	int lvl = 0;
 	while (r < P && lvl < MAXLVL)
@@ -87,14 +79,14 @@ int SkipList<K, V>::randomLevel() const {
 	return lvl;
 }
 
-template <typename K, typename V>
-void SkipList<K, V>::print() const {
+template <typename E>
+void SkipList<E>::print() const {
 	int currentLevel = lvl;
     while(currentLevel >= 0) {
-		Node *node = header->next[currentLevel];
+		auto node = header->next[currentLevel]; // TODO: fix auto
 		cout << "S" << currentLevel << ": ";
 		while (node) {
-			cout << node->key << " ";
+			cout << node->key() << " ";
 			node = node->next[currentLevel];
 		}
 		cout << endl;
@@ -102,26 +94,26 @@ void SkipList<K, V>::print() const {
 	}
 };
 
-template <typename K, typename V>
-typename SkipList<K, V>::Node* SkipList<K, V>::find(const K& k) {
-    Node* s = header;
+template <typename E>
+typename SkipList<E>::SLEntry* SkipList<E>::find(const K& k) {
+    SLEntry* s = header;
 
     int currentLevel = lvl;
     while(currentLevel >= 0) {
         while(
             s->next[currentLevel] &&
-            s->next[currentLevel]->key < k
+            s->next[currentLevel]->key() < k
         ) {
             s = s->next[currentLevel];
         }
         --currentLevel;
     }
 
-    while(s->key != k && s->next[0]) {
+    while(s->key() != k && s->next[0]) {
         s = s->next[0];
     }
 
-    if(s && s->key == k) {
+    if(s && s->key() == k) {
         return s;
     } else {
         throw runtime_error("No element with this key"); // TODO: custom exception
@@ -129,22 +121,22 @@ typename SkipList<K, V>::Node* SkipList<K, V>::find(const K& k) {
     }
 }
 
-template <typename K, typename V>
-void SkipList<K, V>::erase(const Node* p) {
+template <typename E>
+void SkipList<E>::erase(const SLEntry* p) {
     erase(p->key);
 }
 
-template <typename K, typename V>
-void SkipList<K, V>::erase(const K& k) {
-    Node* s = header;
-    vector<Node*> toUpdateAfter(MAXLVL+1);
+template <typename E>
+void SkipList<E>::erase(const K& k) {
+    SLEntry* s = header;
+    vector<SLEntry*> toUpdateAfter(MAXLVL+1);
     
     // found where is the correct place for the new element
     int currentLevel = lvl;
     while(currentLevel >= 0) {
         while(
             s->next[currentLevel] &&
-            s->next[currentLevel]->key < k
+            s->next[currentLevel]->key() < k
         ) {
             s = s->next[currentLevel];
         }
@@ -153,7 +145,7 @@ void SkipList<K, V>::erase(const K& k) {
     }
     s = s->next[0]; // TODO: after()
 
-   if(s != nullptr || s->key == k) {
+   if(s != nullptr || s->key() == k) {
         for(int i = 0; i <= lvl; i++) {
             if(toUpdateAfter[i]->next[i] != s) {
                 break;
@@ -169,17 +161,17 @@ void SkipList<K, V>::erase(const K& k) {
     }
 }
 
-template <typename K, typename V>
-typename SkipList<K, V>::Node* SkipList<K, V>::put(const K& k, const V& v) {
-    Node* s = header;
-    vector<Node*> toUpdateAfter(MAXLVL+1);
+template <typename E>
+typename SkipList<E>::SLEntry* SkipList<E>::put(const K& k, const V& v) {
+    SLEntry* s = header;
+    vector<SLEntry*> toUpdateAfter(MAXLVL+1);
 
     // found where is the correct place for the new element
     int currentLevel = lvl;
     while(currentLevel >= 0) {
         while(
             s->next[currentLevel] &&
-            s->next[currentLevel]->key < k
+            s->next[currentLevel]->key() < k
         ) {
             s = s->next[currentLevel];
         }
@@ -188,10 +180,10 @@ typename SkipList<K, V>::Node* SkipList<K, V>::put(const K& k, const V& v) {
     }
     s = s->next[0]; // TODO: after()
 
-    Node* newNode;
+    SLEntry* newNode;
 
     // insert new only if there is no key k already
-    if(s == nullptr || s->key != k) {
+    if(s == nullptr || s->key() != k) {
         int newLevel = randomLevel(); // TODO: use flip coin
 
         if(newLevel > lvl) {
@@ -201,7 +193,7 @@ typename SkipList<K, V>::Node* SkipList<K, V>::put(const K& k, const V& v) {
             lvl = newLevel;
         }
 
-        newNode = new Node(k, v, newLevel);
+        newNode = new SLEntry(k, v, newLevel);
 
         // update all
         int u = 0;
@@ -214,63 +206,27 @@ typename SkipList<K, V>::Node* SkipList<K, V>::put(const K& k, const V& v) {
         n++;
     } else {
         // update the value only, since the key is the same
-        s->val = v;
+        s->setValue(v);
         newNode = s;
     }
 
     return newNode;
 }
 
-template <typename K, typename V>
-bool SkipList<K, V>::flipCoin() const {
+template <typename E>
+bool SkipList<E>::flipCoin() const {
     return rand() % 2; //since we are looking for 0 tails | 1 heads
 }
 
-template <typename K, typename V>
-typename SkipList<K, V>::Node* SkipList<K, V>::after(const Node* p) {
-    if(p->lvl < p->next.size()) {
-        return p->next[p->lvl];
-    } else {
-       return nullptr;
-    }
-}
-
-template <typename K, typename V>
-typename SkipList<K, V>::Node* SkipList<K, V>::below(const Node* p) {
-    if(p->lvl > 0) {
-        return p->prev->next[p->lvl-1];
-    } else {
-        return nullptr;
-    }
-}
-
-template <typename K, typename V>
-typename SkipList<K, V>::Node* SkipList<K, V>::above(const Node* p) {
-    // if(p->lvl < p->prev->next.size()-1) {
-    //     return p->prev->next[++p->lvl];
-    // } else {
-    //     throw runtime_error("There is no above!");
-    // }
-}
-
-template <typename K, typename V>
-typename SkipList<K, V>::Node* SkipList<K, V>::before(const Node* p) {
-    // if(p->lvl < p->prev->prev->next.size()) {
-    //     return p->prev->prev->next[p->lvl];
-    // } else {
-    //     throw runtime_error("There is no before!");
-    // }
-}
-
-template <typename K, typename V>
-void SkipList<K, V>::copy(const SkipList<K, V>& b) {
-    for(SkipList<K, V>::Node* it = b.begin(); it != b.end(); ++it) {
+template <typename E>
+void SkipList<E>::copy(const SkipList<E>& b) {
+    for(SkipList<E>::SLEntry* it = b.begin(); it != b.end(); ++it) {
         insertBack(*it);
     }
 }
 
-template <typename K, typename V>
-void SkipList<K, V>::free() {
+template <typename E>
+void SkipList<E>::free() {
     // while(!empty()) {
         // TODO
     // }
@@ -278,45 +234,81 @@ void SkipList<K, V>::free() {
 
 
 /*
-template <typename K, typename V>
-SkipList<K, V>::Iterator::Iterator() {
+template <typename E>
+SkipList<E>::Iterator::Iterator() {
     v = new Node();
 }
 
-template <typename K, typename V>
-SkipList<K, V>::Iterator::Iterator(Node* u) {
+template <typename E>
+SkipList<E>::Iterator::Iterator(SLEntry* u) {
     v = u;
 }
 
-template <typename K, typename V>
-SkipList<K, V>::Iterator::Iterator(const Iterator& u) {
+template <typename E>
+SkipList<E>::Iterator::Iterator(const Iterator& u) {
     copy(u);
 }
 
-template <typename K, typename V>
-typename SkipList<K, V>::Iterator& SkipList<K, V>::Iterator::operator =(const Iterator& u) {
+template <typename E>
+typename SkipList<E>::Iterator& SkipList<E>::Iterator::operator =(const Iterator& u) {
     copy(u);
     return *this;
 }
 
-template <typename K, typename V>
-void SkipList<K, V>::Iterator::copy(const Iterator& u) {
+template <typename E>
+void SkipList<E>::Iterator::copy(const Iterator& u) {
     v = u.v;
 }
 
-template <typename K, typename V>
-K& SkipList<K, V>::Iterator::operator *() {
+template <typename E>
+K& SkipList<E>::Iterator::operator *() {
     return v->key;
 }
 
-template <typename K, typename V>
-bool SkipList<K, V>::Iterator::operator ==(const Iterator& p) const {
+template <typename E>
+bool SkipList<E>::Iterator::operator ==(const Iterator& p) const {
     return p.v == v;
 }
 
-template <typename K, typename V>
-bool SkipList<K, V>::Iterator::operator !=(const Iterator& p) const {
+template <typename E>
+bool SkipList<E>::Iterator::operator !=(const Iterator& p) const {
     return p.v != v;
+}
+
+template <typename E>
+typename SkipList<E>::SLEntry* SkipList<E>::after(const SLEntry* p) {
+    if(p->lvl < p->next.size()) {
+        return p->next[p->lvl];
+    } else {
+       return nullptr;
+    }
+}
+
+template <typename E>
+typename SkipList<E>::SLEntry* SkipList<E>::below(const SLEntry* p) {
+    if(p->lvl > 0) {
+        return p->prev->next[p->lvl-1];
+    } else {
+        return nullptr;
+    }
+}
+
+template <typename E>
+typename SkipList<E>::SLEntry* SkipList<E>::above(const SLEntry* p) {
+    // if(p->lvl < p->prev->next.size()-1) {
+    //     return p->prev->next[++p->lvl];
+    // } else {
+    //     throw runtime_error("There is no above!");
+    // }
+}
+
+template <typename E>
+typename SkipList<E>::SLEntry* SkipList<E>::before(const SLEntry* p) {
+    // if(p->lvl < p->prev->prev->next.size()) {
+    //     return p->prev->prev->next[p->lvl];
+    // } else {
+    //     throw runtime_error("There is no before!");
+    // }
 }
 */
 #endif
