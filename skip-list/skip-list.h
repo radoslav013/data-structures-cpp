@@ -24,42 +24,210 @@ class SkipList {
         typedef typename SLEntry::Value V; // a value
         class Iterator;
     public:
+        //! Default constructor
+        /*!
+            sets all default values
+         */
         SkipList() : header(new SLEntry(MAXLVL)), n(0), lvl(0) { srand((unsigned)time(0)); } // random reset seed
+
+        //! Destructor
+        /*!
+            Cleans pointers, specifically the header
+         */
         ~SkipList();
-        Iterator find(const K& k); // find entry with key k
-        Iterator put(const K& k, const V& v); // insert/replace pair (k,v)
-        void erase(const K& k); // remove entry with key k
-        void erase(const Iterator& p); // erase entry at p
+
+        //! Find in Skip List
+        /*!
+            Traverses through the elements to find the entry with the given key
+            \param key      key value
+            \return         Iterator to that entry
+         */
+        Iterator find(const K& k);
+
+        //! Insert into Skip List
+        /*!
+            If an entry with the provided key already exists, replace the provided data value.
+            Otherwise, append the new key-data value pair in the map list.
+            \param key      key value
+            \param val      data value
+            \return         iterator to the position of the modified or new entry
+         */
+        Iterator put(const K& k, const V& v);
+
+        //! Deletes element
+        /*!
+            Deletes element with key k
+            \param key      key value
+         */
+        void erase(const K& k);
+
+        //! Deletes element
+        /*!
+            Deletes element by iterator
+            \param p      iterator
+         */
+        void erase(const Iterator& p);
+
+        //! Get begin iterator
+        /*!
+            Gets header iterator
+            \return         iterator to the header
+         */
         Iterator begin() const { return Iterator(header); } // pointer to first entry
 
         // utilities
+
+        //! Returns the size
+        /*!
+            Returns the size
+            \return         size
+         */
         int size() const { return n; }
+
+        //! Checks if skip list is empty
+        /*!
+            Checks if skip list is empty
+            \return         true is skip list is empty and false otherwise
+         */
         bool empty() const { return size() == 0; }
+
+        //! Flip a coin
+        /*!
+            Generates a random number between 0 ... 1
+            \return         false for tails and true for heads
+         */
         bool flipCoin() const;
+
+        //! Generate new height of newly inserted tower
+        /*!
+            Returns the height of the newly inserted tower. While the coin flips heads it keeps adding.
+            \return         new height
+         */
         int getNewHeight() const;
+
+        //! Prints the skip list simply
+        /*!
+            Simply prints the skip list with the level indexing
+         */
         void print() const;
     private:
+        //! The max level
+        /*!
+            Depends on the use case. Set for, because of testing with small amount of entries
+         */
         const int MAXLVL = 4;
+
+        //! Level of the skip list
+        /*!
+            Stores the current level of the tree / height
+         */
         int lvl;
+
+        //! Size
+        /*!
+            Stores the size
+         */
         int n;
+
+        //! The first entry, only storing the next pointers
+        /*!
+            storing the next pointers
+         */
         SLEntry* header;
+
+        //! Helper function for destructing
+        /*!
+            Helper function for the destrcuting
+         */
         void free();
     public:
+
+        //! Class Iterator
+        /*!
+            Iterator helps when working with the entries
+         */
         class Iterator {
             public:
+                //! Default constructor
+                /*!
+                    creates an empty entry
+                */
                 Iterator();
+
+                //! Parameter Constructor
+                /*!
+                    Accepts already created pointer to Skip list Entry object
+                    \param u      pointer to skip list entry
+                */
                 Iterator(SLEntry* u);
+
+                //! Copy constructor
+                /*!
+                    Copies pointer to one pointer to current
+                    \param u      iterator
+                */
                 Iterator(const Iterator& u);
+
+                //! Overloaded the -> operator
+                /*!
+                    Gives the possibility of a better syntax when working with iterators. 
+                    Got the idea from std vector and list.
+                    \return         pointer to skip list entry
+                */
                 SLEntry* operator->();
+
+                //! Check if two iterators are equal
+                /*!
+                    Checks equality by pointers
+                    \param u      iterator
+                    \return         true if equal
+                */
                 bool operator ==(const Iterator& p) const;
+
+                //! Check if two iterators are not equal
+                /*!
+                    Checks equality by pointers
+                    \param u      iterator
+                    \return         true if not equal
+                */
                 bool operator !=(const Iterator& p) const;
+
+                //! checks if pointer exists
+                /*!
+                    Checks if pointer exists
+                    \return         true if exists
+                */
                 bool exist() const;
+
+                //! = Operator oveloaded
+                /*!
+                    Copies iterator to current, 
+                    \param p      iterator
+                    \return         Iterator
+                */
                 Iterator& operator =(const Iterator& p);
+
+                //! Returns after this level
+                /*!
+                    Returns the next iterator
+                    \param lvl      level
+                    \return         next iterator
+                */
                 Iterator after(int lvl) const;
 
             friend class SkipList;
             private:
+                //! Stores the pointer v
+                /*!
+                    Stores the pointer v
+                */
                 SLEntry* v;
+
+                //! Copies pointer to this iterator 
+                /*!
+                    Checks equality by pointers
+                    \param u      iterator
+                */
                 void copy(const Iterator& u);
         };
 };

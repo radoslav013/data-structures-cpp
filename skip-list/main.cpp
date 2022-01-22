@@ -7,7 +7,9 @@ using namespace std;
 #include "entry.h"
 
 int main() {
+    // create skip list object
     SkipList< Entry<int, string> > sl;
+    // insert some names with ids
     sl.put(1, "Rado");
     sl.put(2, "Ivan");
     sl.put(10, "Yasen");
@@ -15,6 +17,7 @@ int main() {
     sl.put(7, "Martin");
     sl.put(4, "Hristo");
     
+    // find an element
     SkipList< Entry<int, string> >::Iterator ten = sl.find(10);
 
     sl.print();
