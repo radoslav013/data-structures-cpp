@@ -14,13 +14,15 @@ int main() {
     sl.put(5, "Georgi");
     sl.put(7, "Martin");
     sl.put(4, "Hristo");
-
+    
     SkipList< Entry<int, string> >::Iterator ten = sl.find(10);
 
     sl.print();
     sl.erase(5); // erase by key
     sl.erase(ten); // erase by iterator
     // sl.erase(11); // erase by key that doesn't exist
+
+    cout << "------------" << endl;
 
     sl.print();
     return 0;

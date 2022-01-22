@@ -25,29 +25,24 @@ class SkipList {
         class Iterator;
     public:
         SkipList() : header(new SLEntry(MAXLVL)), n(0), lvl(0) { srand((unsigned)time(0)); } // random reset seed
-        SkipList(const SkipList<E>& b);
         ~SkipList();
         Iterator find(const K& k); // find entry with key k
         Iterator put(const K& k, const V& v); // insert/replace pair (k,v)
         void erase(const K& k); // remove entry with key k
         void erase(const Iterator& p); // erase entry at p
-        SkipList& operator =(const SkipList<E>& b);
-
         Iterator begin() const { return Iterator(header); } // pointer to first entry
 
         // utilities
         int size() const { return n; }
         bool empty() const { return size() == 0; }
         bool flipCoin() const;
-        int randomLevel() const;
+        int getNewHeight() const;
         void print() const;
     private:
-        const int MAXLVL = 3; // TODO: see what is the best?
-        const float P = 0.5; // TODO: see what is the best
+        const int MAXLVL = 4;
         int lvl;
         int n;
         SLEntry* header;
-        void copy(const SkipList& b);
         void free();
     public:
         class Iterator {
@@ -70,46 +65,9 @@ class SkipList {
 };
 
 template <typename E>
-SkipList<E>::SkipList(const SkipList<E>& b) {
-    copy(b);
-}
-
-template <typename E>
-SkipList<E>& SkipList<E>::operator =(const SkipList<E>& b) {
-    cout << 1 << endl;
-    if(this != &b) {
-        cout << 2 << endl;
-        free();
-        copy(b);
-    }
-    return *this;
-}
-
-template <typename E>
-void SkipList<E>::copy(const SkipList<E>& b) {
-    header = b.header;
-    n = b.n;
-    lvl = b.lvl;
-
-    // Iterator node = begin().after(0);
-    // while (node.v) {
-    //     put(node->key(), node->value());
-    //     node = node.after(0);
-    // }
-}
-
-template <typename E>
 void SkipList<E>::free() {
     n = 0;
     lvl = 0;
-    
-    // Iterator curr = begin().after(0);
-    // while(curr.after(0).exist()) {
-    //     Iterator last = curr;
-    //     curr = curr.after(0);
-    //     last->next.clear();
-    // }
-
     if(header) {
         delete header;
     }
@@ -121,15 +79,12 @@ SkipList<E>::~SkipList() {
 }
 
 template <typename E>
-int SkipList<E>::randomLevel() const {
-    float r = (float)rand()/RAND_MAX;
-	int lvl = 0;
-	while (r < P && lvl < MAXLVL)
-	{
-		lvl++;
-		r = (float)rand()/RAND_MAX;
-	}
-	return lvl;
+int SkipList<E>::getNewHeight() const {
+    int l = 0;
+    while(!flipCoin() && l < MAXLVL) {
+        ++l;
+    }
+	return l;
 }
 
 template <typename E>
@@ -240,7 +195,7 @@ typename SkipList<E>::Iterator SkipList<E>::put(const K& k, const V& v) {
 
     // insert new only if there is no key k already
     if(!s.exist() || s->key() != k) {
-        int newLevel = randomLevel(); // TODO: use flip coin
+        int newLevel = getNewHeight();
 
         if(newLevel > lvl) {
             for(int i = lvl+1; i < newLevel+1; i++) {
