@@ -12,21 +12,20 @@ class SkipList;
 
 template <typename E>
 class SkipList {
-    protected:
-        typedef SLEntry<E> SLEntry; // an entry
     public:
+        typedef SLEntry<E> SLEntry; // an entry
         typedef typename SLEntry::Key K; // a key
         typedef typename SLEntry::Value V; // a value
-        // class Iterator;
+        class Iterator;
     public:
         SkipList() : header(new SLEntry(MAXLVL)), n(0), lvl(0) { srand((unsigned)time(0)); } // random reset seed
         ~SkipList();
-        SLEntry* find(const K& k); // find entry with key k
-        SLEntry* put(const K& k, const V& v); // insert/replace pair (k,v)
+        Iterator find(const K& k); // find entry with key k
+        Iterator put(const K& k, const V& v); // insert/replace pair (k,v)
         void erase(const K& k); // remove entry with key k
-        void erase(const SLEntry* p); // erase entry at p
+        void erase(const Iterator p); // erase entry at p
 
-        SLEntry* begin() const { return header; } // pointer to first entry
+        Iterator begin() const { return Iterator(header); } // pointer to first entry
 
         // utilities
         int size() const { return n; }
@@ -43,20 +42,22 @@ class SkipList {
         void copy(const SkipList& b);
         void free();
     public:
-        // class Iterator {
-        //     public:
-        //         Iterator();
-        //         Iterator(SLEntry* u);
-        //         Iterator(const Iterator& u);
-        //         K& operator*();
-        //         bool operator ==(const Iterator& p) const;
-        //         bool operator !=(const Iterator& p) const;
-        //         Iterator& operator =(const Iterator& p);
-        //         friend class SkipList;
-        //     private:
-        //         SLEntry* v;
-        //         void copy(const Iterator& u);
-        // };
+        class Iterator {
+            public:
+                Iterator();
+                Iterator(SLEntry* u);
+                Iterator(const Iterator& u);
+                SLEntry* operator->();
+                bool operator ==(const Iterator& p) const;
+                bool operator !=(const Iterator& p) const;
+                bool exist() const;
+                Iterator& operator =(const Iterator& p);
+
+            friend class SkipList;
+            private:
+                SLEntry* v;
+                void copy(const Iterator& u);
+        };
 };
 
 template <typename E>
@@ -95,8 +96,8 @@ void SkipList<E>::print() const {
 };
 
 template <typename E>
-typename SkipList<E>::SLEntry* SkipList<E>::find(const K& k) {
-    SLEntry* s = header;
+typename SkipList<E>::Iterator SkipList<E>::find(const K& k) {
+    Iterator s = begin();
 
     int currentLevel = lvl;
     while(currentLevel >= 0) {
@@ -113,7 +114,7 @@ typename SkipList<E>::SLEntry* SkipList<E>::find(const K& k) {
         s = s->next[0];
     }
 
-    if(s && s->key() == k) {
+    if(s.exist() && s->key() == k) {
         return s;
     } else {
         throw runtime_error("No element with this key"); // TODO: custom exception
@@ -122,13 +123,13 @@ typename SkipList<E>::SLEntry* SkipList<E>::find(const K& k) {
 }
 
 template <typename E>
-void SkipList<E>::erase(const SLEntry* p) {
+void SkipList<E>::erase(const Iterator p) {
     erase(p->key);
 }
 
 template <typename E>
 void SkipList<E>::erase(const K& k) {
-    SLEntry* s = header;
+    Iterator s = begin();
     vector<SLEntry*> toUpdateAfter(MAXLVL+1);
     
     // found where is the correct place for the new element
@@ -140,7 +141,7 @@ void SkipList<E>::erase(const K& k) {
         ) {
             s = s->next[currentLevel];
         }
-        toUpdateAfter[currentLevel] = s;
+        toUpdateAfter[currentLevel] = s.v;
         --currentLevel;
     }
     s = s->next[0]; // TODO: after()
@@ -162,9 +163,9 @@ void SkipList<E>::erase(const K& k) {
 }
 
 template <typename E>
-typename SkipList<E>::SLEntry* SkipList<E>::put(const K& k, const V& v) {
-    SLEntry* s = header;
-    vector<SLEntry*> toUpdateAfter(MAXLVL+1);
+typename SkipList<E>::Iterator SkipList<E>::put(const K& k, const V& v) {
+    Iterator s = begin();
+    vector<Iterator> toUpdateAfter(MAXLVL+1);
 
     // found where is the correct place for the new element
     int currentLevel = lvl;
@@ -180,7 +181,7 @@ typename SkipList<E>::SLEntry* SkipList<E>::put(const K& k, const V& v) {
     }
     s = s->next[0]; // TODO: after()
 
-    SLEntry* newNode;
+    Iterator newNode;
 
     // insert new only if there is no key k already
     if(s == nullptr || s->key() != k) {
@@ -193,13 +194,13 @@ typename SkipList<E>::SLEntry* SkipList<E>::put(const K& k, const V& v) {
             lvl = newLevel;
         }
 
-        newNode = new SLEntry(k, v, newLevel);
+        newNode = Iterator(new SLEntry(k, v, newLevel));
 
         // update all
         int u = 0;
         while(u <= newLevel) {
             newNode->next[u] = toUpdateAfter[u]->next[u];
-            toUpdateAfter[u]->next[u] = newNode;
+            toUpdateAfter[u]->next[u] = newNode.v;
 
             ++u;
         }
@@ -232,11 +233,9 @@ void SkipList<E>::free() {
     // }
 }
 
-
-/*
 template <typename E>
 SkipList<E>::Iterator::Iterator() {
-    v = new Node();
+    v = new SLEntry(0);
 }
 
 template <typename E>
@@ -261,8 +260,8 @@ void SkipList<E>::Iterator::copy(const Iterator& u) {
 }
 
 template <typename E>
-K& SkipList<E>::Iterator::operator *() {
-    return v->key;
+typename SkipList<E>::SLEntry* SkipList<E>::Iterator::operator ->() {
+    return v;
 }
 
 template <typename E>
@@ -274,6 +273,12 @@ template <typename E>
 bool SkipList<E>::Iterator::operator !=(const Iterator& p) const {
     return p.v != v;
 }
+
+template <typename E>
+bool SkipList<E>::Iterator::exist() const {
+    return v != nullptr;
+}
+/*
 
 template <typename E>
 typename SkipList<E>::SLEntry* SkipList<E>::after(const SLEntry* p) {
