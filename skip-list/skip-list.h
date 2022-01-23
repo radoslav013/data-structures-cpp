@@ -330,6 +330,9 @@ void SkipList<E>::erase(const K& k) {
             toUpdateAfter[i]->next[i] = s->next[i];
         }
 
+        // Erase the vector
+        s->next.clear();
+
         // update all
         while(lvl > 0 && !begin().after(lvl).exist()) {
            --lvl;

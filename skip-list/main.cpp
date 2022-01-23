@@ -18,20 +18,28 @@ int main() {
     sl.put(4, "Hristo Botev");
     
     // find an element
-    SkipList< Entry<int, string> >::Iterator ten = sl.find(10);
+    SkipList< Entry<int, string> >::Iterator found = sl.find(10);
 
     // Get the value(name) and print it
-    cout << ten->value() << endl;
+    cout << found->value() << endl;
+
+    cout << "------------" << endl;
 
     // Visualize
     sl.print();
     sl.erase(5); // erase by key
-    sl.erase(ten); // erase by iterator
+    sl.erase(found); // erase by iterator
     // sl.erase(11); // erase by key that doesn't exist
 
     cout << "------------" << endl;
 
     // Visualize the change after deletion
     sl.print();
+
+    // find an element
+    found = sl.find(7);
+
+    // Get the value(name) and print it
+    cout << found->value() << endl;
     return 0;
 }
