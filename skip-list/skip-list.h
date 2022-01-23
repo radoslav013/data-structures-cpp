@@ -321,6 +321,7 @@ void SkipList<E>::erase(const K& k) {
     }
     s = s.after(0);
 
+    // update all previous
     if(s.exist() && s->key() == k) {
         for(int i = 0; i <= lvl; i++) {
             if(toUpdateAfter[i].after(i) != s) {
