@@ -9,16 +9,19 @@ using namespace std;
 int main() {
     // create skip list object
     SkipList< Entry<int, string> > sl;
-    // insert some names with ids
-    sl.put(1, "Rado");
-    sl.put(2, "Ivan");
-    sl.put(10, "Yasen");
-    sl.put(5, "Georgi");
-    sl.put(7, "Martin");
-    sl.put(4, "Hristo");
+    // insert some writer names with their artist_id
+    sl.put(1, "Pencho Slaveykov");
+    sl.put(2, "Ivan Vazov");
+    sl.put(10, "Nikola Vaptsarov");
+    sl.put(5, "Nikolay Haytov");
+    sl.put(7, "Yordan Radichkov");
+    sl.put(4, "Hristo Botev");
     
     // find an element
     SkipList< Entry<int, string> >::Iterator ten = sl.find(10);
+
+    // Get the value(name) and print it
+    cout << ten->value() << endl;
 
     // Visualize
     sl.print();
