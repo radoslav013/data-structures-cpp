@@ -234,8 +234,6 @@ class SkipList {
 
 template <typename E>
 void SkipList<E>::free() {
-    n = 0;
-    lvl = 0;
     if(header) {
         delete header;
     }
@@ -249,6 +247,7 @@ SkipList<E>::~SkipList() {
 template <typename E>
 int SkipList<E>::getNewHeight() const {
     int l = 0;
+    // increment l until tails
     while(!flipCoin() && l < MAXLVL) {
         ++l;
     }
@@ -334,6 +333,7 @@ void SkipList<E>::erase(const K& k) {
         while(lvl > 0 && !begin().after(lvl).exist()) {
            --lvl;
         }
+
         --n;
     } else {
         throw SkipListExcpt("No element found to delete.");
