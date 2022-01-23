@@ -20,6 +20,7 @@ int main() {
     // find an element
     SkipList< Entry<int, string> >::Iterator ten = sl.find(10);
 
+    // Visualize
     sl.print();
     sl.erase(5); // erase by key
     sl.erase(ten); // erase by iterator
@@ -27,6 +28,7 @@ int main() {
 
     cout << "------------" << endl;
 
+    // Visualize the change after deletion
     sl.print();
     return 0;
 }
