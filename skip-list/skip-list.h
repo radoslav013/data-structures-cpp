@@ -115,7 +115,7 @@ class SkipList {
         /*!
             Depends on the use case. Set for, because of testing with small amount of entries
          */
-        const int MAXLVL = 4;
+        const int MAXLVL = 3;
 
         //! Level of the skip list
         /*!
