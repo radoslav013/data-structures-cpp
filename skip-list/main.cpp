@@ -9,7 +9,7 @@ using namespace std;
 int main() {
     // create skip list object
     SkipList< Entry<int, string> > sl;
-    // insert some writer names with their artist_id
+    // insert some writer names with their writer_id
     sl.put(1, "Pencho Slaveykov");
     sl.put(2, "Ivan Vazov");
     sl.put(10, "Nikola Vaptsarov");
