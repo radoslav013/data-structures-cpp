@@ -57,12 +57,23 @@ int main() {
     // Collection of bulgarian artists
     RBTree< Entry<int, string> > rbtree;
     RBTree< Entry<int, string> >::Iterator ten = rbtree.insert(10, "Maria Bakalova");
-    // RBTree< Entry<int, string> >::Iterator five = rbtree.insert(5, "Kosta Tsonev");
+    RBTree< Entry<int, string> >::Iterator five = rbtree.insert(5, "Kosta Tsonev");
     RBTree< Entry<int, string> >::Iterator twenty = rbtree.insert(20, "Georgi Mamalev");
     RBTree< Entry<int, string> >::Iterator thirty = rbtree.insert(30, "Teodora Duhovnikova");
-    // RBTree< Entry<int, string> >::Iterator fifteen = rbtree.insert(15, "Velko Kanev");
+    RBTree< Entry<int, string> >::Iterator fifteen = rbtree.insert(15, "Velko Kanev");
+    RBTree< Entry<int, string> >::Iterator twentyfive = rbtree.insert(25, "Konstantin Kotsev");
+    RBTree< Entry<int, string> >::Iterator one = rbtree.insert(1, "Georgi Kaloyanchev");
     rbtree.print();
 
-    // cout << (*rbtree.find(20)).value() << endl;
+    cout << "----------" << endl;
+
+    // Demonstrate the deletion by key and iterator
+    // rbtree.erase(10);
+    rbtree.erase(ten);
+
+    rbtree.print();
+
+    // Demonstrate the search
+    cout << (*rbtree.find(5)).value() << endl;
     return 0;
 }

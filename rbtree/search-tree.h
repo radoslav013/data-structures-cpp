@@ -32,8 +32,6 @@ class SearchTree {
         TPos finder(const K& k, const TPos& v); // find utility
         TPos inserter(const K& k, const V& x); // insert utility
         TPos eraser(TPos& v); // erase utility
-        TPos restructure(const TPos& v); // restructure trinode
-        TPos sibling(const TPos& v) { return v.sibling(); }
     private: // member data
         BinaryTree T; // the binary tree
         int n;
@@ -43,8 +41,8 @@ class SearchTree {
                 TPos v; // which entry
             public:
                 Iterator(const TPos& vv) : v(vv) { } // constructor
-                const E& operator*() const { return *v; } // get entry (read only)
-                E& operator*() { return *v; } // get entry (read/write)
+                const E& operator*() const { return v.element(); } // get entry (read only)
+                // E& operator*() { return *v; } // get entry (read/write)
                 bool operator==(const Iterator& p) const { return v == p.v; }
                 Iterator& operator++(); // inorder successor
 
@@ -97,7 +95,8 @@ typename SearchTree<E>::TPos SearchTree<E>::inserter(const K& k, const V& x) {
     while (v.isInternal()) // key already exists?
         v = finder(k, v.right()); // look further
     T.expandExternal(v); // add new internal node
-    (*v).setKey(k); (*v).setValue(x); // set entry
+    v.element().setKey(k); 
+    v.element().setValue(x); // set entry
     n++; // one more entry
     return v; // return insert position
 }
@@ -117,7 +116,8 @@ typename SearchTree<E>::TPos SearchTree<E>::eraser(TPos& v) {
         w = v.right(); // go to right subtree
         do { w = w.left(); } while (w.isInternal()); // get leftmost node
         TPos u = w.parent();
-        (*v).setKey((*u).key()); (*v).setValue((*u).value()); // copy w’s parent to v
+        v.element().setKey(u.element().key()); 
+        v.element().setValue(u.element().value()); // copy w’s parent to v
     }
     n--; // one less entry
     return T.removeAboveExternal(w); // remove w and parent
@@ -134,98 +134,6 @@ void SearchTree<E>::erase(const K& k) {
 template <typename E>
 void SearchTree<E>::erase(const Iterator& p) {
     eraser(p.v);
-}
-
-template <typename E>
-typename SearchTree<E>::TPos SearchTree<E>::restructure(const TPos& v) {
-    TPos x, y, z, a, b, c, T0, T1, T2, T3;
-
-    x = v;
-    y = x.parent(); // Parent of x
-    z = y.parent(); // Parent of y (Grandparent of x)
-
-    bool xIsLeftChild = (x.element().key() == y.left().element().key());
-    bool yIsLeftChild = (y.element().key() == z.left().element().key());
-
-    if (xIsLeftChild && yIsLeftChild) // Configuration 1
-    {
-        a = x;
-        b = y;
-        c = z;
-        T0 = a.left();
-        T1 = a.right();
-        T2 = b.right();
-        T3 = c.right();
-    }
-    else if (!xIsLeftChild && !yIsLeftChild) // Configuration 2
-    {
-        a = z;
-        b = y;
-        c = x;
-        T0 = a.left();
-        T1 = b.left();
-        T2 = c.left();
-        T3 = c.right();
-    }
-    else if(!xIsLeftChild && yIsLeftChild) // Configuration 3
-    {
-        a = y;
-        b = x;
-        c = z;
-        T0 = a.left();
-        T1 = b.left();
-        T2 = b.right();
-        T3 = c.right();
-    }
-    else // Configuration 4
-    {
-        a = z;
-        b = x;
-        c = y;
-        T0 = a.left();
-        T1 = b.left();
-        T2 = b.right();
-        T3 = c.right();
-    }
-
-    if(z.element().key() == root().element().key())
-    {
-        root() = b;
-        b.parent() = NULL;
-    }
-    else
-    {
-        TPos zParent;
-        zParent = z.parent();   // Find x's parent
-        if ( zParent.left().element().key() == z.element().key() )
-            zParent.setLeft(b);
-        else
-            zParent.setRight(b);
-    }
-
-    b.setLeft(a);
-    a.setParent(b);
-
-    a.setLeft(T0);
-    if (T0.element().key())
-        T0.setParent(a);
-
-    a.setRight(T1);
-    if (T1.element().key())
-        T1.setParent(a);
-
-    b.setRight(c);
-    c.setParent(b);
-
-    c.setLeft(T2);
-    if (T2.element().key())
-        T2.setParent(c);
-
-    c.setRight(T3);
-    if (T3.element().key())
-        T3.setParent(c);
-
-    return b;
 }
 
 #endif

@@ -26,8 +26,6 @@ class LinkedBinaryTree {
                 Node* left;
                 Node* right;
                 Node() : el(), parent(nullptr), left(nullptr), right(nullptr) {}
-                Node* sibling() const 				// get our sibling
-                    { return (this == parent->left ? parent->right : parent->left); }
 
             friend class LinkedBinaryTree<T>;
         };
@@ -327,11 +325,6 @@ template <typename T>
 typename LinkedBinaryTree<T>::Position& LinkedBinaryTree<T>::Position::operator =(const Position& pos) {
     copy(pos);
     return *this;
-}
-
-template <typename T>
-typename LinkedBinaryTree<T>::Position LinkedBinaryTree<T>::Position::sibling() const {
-    return Position(node->sibling());
 }
 
 // Position checks isRoot
