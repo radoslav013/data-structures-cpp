@@ -60,8 +60,8 @@ typename RBTree<E>::TPos RBTree<E>::restructure(const TPos& v) {
     y = x.parent(); // Parent of x
     z = y.parent(); // Grandparent of x
 
-    bool xIsLeftChild = (x.element().key() == y.left().element().key());
-    bool yIsLeftChild = (y.element().key() == z.left().element().key());
+    bool xIsLeftChild = (x->key() == y.left()->key());
+    bool yIsLeftChild = (y->key() == z.left()->key());
 
     // inorder traversal order
     if (xIsLeftChild && yIsLeftChild) // x is left child of y and y is left child of z
@@ -104,40 +104,38 @@ typename RBTree<E>::TPos RBTree<E>::restructure(const TPos& v) {
         T2 = b.right();
         T3 = c.right();
     }
-
+    
     if(z == ST::root())
     {
         ST::root() = b;
         b.parent() = 0;
     } else {
         TPos zParent = z.parent(); // grandparent
-        if (zParent.left().element().key() == z.element().key())
+        if (zParent.left()->key() == z->key())
             zParent.setLeft(b);
         else
             zParent.setRight(b);
     }
-
+    
     b.setLeft(a);
     a.setParent(b);
-
-    a.setLeft(T0);
-    if ( T0.element().key() != 0 )
+    
+    if (T0.exist() && T0->key() != 0)
         T0.setParent(a);
 
     a.setRight(T1);
-    if ( T1.element().key() != 0 )
+    if (T1.exist() && T1->key() != 0)
         T1.setParent(a);
-
-
+ 
     b.setRight(c);
     c.setParent(b);
 
     c.setLeft(T2);
-    if ( T2.element().key() != 0 )
+    if (T2.exist() && T2->key() != 0)
         T2.setParent(c);
 
     c.setRight(T3);
-    if ( T3.element().key() != 0 )
+    if (T3.exist() && T3->key() != 0)
         T3.setParent(c);
 
     return b;
@@ -190,9 +188,9 @@ template <typename E>
 void RBTree<E>::remedyDoubleRed(const TPos& z) {
     TPos v = z.parent(); // v is z’s parent
     TPos sib = sibling(v);
-    if (v == ST::root() || (*v).isBlack()) return; // v is black, all ok
+    if (v == ST::root() || v->isBlack()) return; // v is black, all ok
     // z, v are double-red
-    if (sibling(v).element().isBlack()) { // Case 1: restructuring
+    if (sibling(v)->isBlack()) { // Case 1: restructuring
         v = restructure(z);
         setBlack(v); // top vertex now black
         setRed(v.left()); setRed(v.right()); // set children red
@@ -212,7 +210,7 @@ void RBTree<E>::erase(const K& k) {
         throw TreeExcept("Erase of nonexistent");
 
     TPos r = ST::eraser(u); // remove u
-    if (r == ST::root() || r.element().isRed() || wasParentRed(r))
+    if (r == ST::root() || r->isRed() || wasParentRed(r))
         setBlack(r); // fix by color change
     else // r, parent both black
         remedyDoubleBlack(r); // fix double-black r
@@ -227,11 +225,11 @@ template <typename E>
 void RBTree<E>::remedyDoubleBlack(const TPos& r) {
     TPos x = r.parent(); // r’s parent
     TPos y = sibling(r); // r’s sibling
-    if (y.element().isBlack()) {
-        if (y.left().element().isRed() || y.right().element().isRed()) { // Case 1: restructuring
+    if (y->isBlack()) {
+        if (y.left()->isRed() || y.right()->isRed()) { // Case 1: restructuring
             // z is y’s red child
-            TPos z = (y.left().element().isRed() ? y.left() : y.right());
-            Color topColor = x.element().color(); // save top vertex color
+            TPos z = (y.left()->isRed() ? y.left() : y.right());
+            Color topColor = x->color(); // save top vertex color
             z = restructure(z); // restructure x,y,z
             setColor(z, topColor); // give z saved color
             setBlack(r); // set r black
@@ -239,7 +237,7 @@ void RBTree<E>::remedyDoubleBlack(const TPos& r) {
         }
         else { // Case 2: recoloring
             setBlack(r); setRed(y); // r=black, y=red
-            if (x.element().isBlack() && !(x == ST::root()))
+            if (x->isBlack() && !(x == ST::root()))
                 remedyDoubleBlack(x); // fix double-black x
             setBlack(x);
         }

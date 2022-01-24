@@ -42,7 +42,8 @@ class LinkedBinaryTree {
                 bool isExternal() const;
                 bool isInternal() const;
                 Position parent() const;
-                Position* operator->() { return node; }
+                bool exist() const;
+                T* operator->();
                 void setParent(Position chNode){ node->parent = chNode.node; } // Set parent
                 Position left() const;
                 void setLeft(Position chNode){ node->left = chNode.node; }  // Set left child
@@ -68,7 +69,6 @@ class LinkedBinaryTree {
         Position setRoot(const T& key);
         void addRoot();
         PositionList& positions() const;
-        Position addChild(const Position& parent, const T& el);
         void expandExternal(const Position& p);
         Position removeAboveExternal(const Position& p);
         void print(Node* node, string indent, bool last) const;
@@ -199,16 +199,6 @@ bool LinkedBinaryTree<T>::empty() const {
 }
 
 template <typename T>
-typename LinkedBinaryTree<T>::Position LinkedBinaryTree<T>::addChild(const Position& parent, const T& el) {
-    Node* node = new Node(el);
-    node->parent = parent.node;
-    parent.node->children.push_back(node);
-    n++;
-
-    return Position(node);
-}
-
-template <typename T>
 void LinkedBinaryTree<T>::print(Node* node, string indent, bool last) const {
     // The 0 nodes are the emptry external nodes, only the first level acts as a virtual root
     if (node) {
@@ -300,6 +290,16 @@ template <typename T>
 void LinkedBinaryTree<T>::copy(const LinkedBinaryTree& tree) {
     _root = tree._root;
     n = tree.n;
+}
+
+template <typename T>
+bool LinkedBinaryTree<T>::Position::exist() const {
+    return node;
+}
+
+template <typename T>
+T* LinkedBinaryTree<T>::Position::operator->() {
+    return node ? &node->el : nullptr;
 }
 
 // Position default constructor
