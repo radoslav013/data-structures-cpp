@@ -53,16 +53,18 @@ typename RBTree<E>::TPos RBTree<E>::sibling(const TPos& v) {
 
 template <typename E>
 typename RBTree<E>::TPos RBTree<E>::restructure(const TPos& v) {
-    TPos x, y, z, a, b, c, T0, T1, T2, T3;
+    TPos x, y, z, a, b, c; // entries
+    TPos T0, T1, T2, T3; // subtrees
 
     x = v;
     y = x.parent(); // Parent of x
-    z = y.parent(); // Parent of y (Grandparent of x)
+    z = y.parent(); // Grandparent of x
 
     bool xIsLeftChild = (x.element().key() == y.left().element().key());
     bool yIsLeftChild = (y.element().key() == z.left().element().key());
 
-    if (xIsLeftChild && yIsLeftChild) // Configuration 1
+    // inorder traversal order
+    if (xIsLeftChild && yIsLeftChild) // x is left child of y and y is left child of z
     {
         a = x;
         b = y;
@@ -72,7 +74,7 @@ typename RBTree<E>::TPos RBTree<E>::restructure(const TPos& v) {
         T2 = b.right();
         T3 = c.right();
     }
-    else if (!xIsLeftChild && !yIsLeftChild) // Configuration 2
+    else if (!xIsLeftChild && !yIsLeftChild) // x is right child of y and y is right child of z
     {
         a = z;
         b = y;
@@ -82,7 +84,7 @@ typename RBTree<E>::TPos RBTree<E>::restructure(const TPos& v) {
         T2 = c.left();
         T3 = c.right();
     }
-    else if(!xIsLeftChild && yIsLeftChild) // Configuration 3
+    else if(!xIsLeftChild && yIsLeftChild) // x is right child of y and y is left child of z
     {
         a = y;
         b = x;
@@ -92,7 +94,7 @@ typename RBTree<E>::TPos RBTree<E>::restructure(const TPos& v) {
         T2 = b.right();
         T3 = c.right();
     }
-    else // Configuration 4
+    else // x is left child of y and y is right child of z
     {
         a = z;
         b = x;
@@ -103,16 +105,13 @@ typename RBTree<E>::TPos RBTree<E>::restructure(const TPos& v) {
         T3 = c.right();
     }
 
-    if(z.element().key() == ST::root().element().key())
+    if(z == ST::root())
     {
         ST::root() = b;
-        b.parent() = NULL;
-    }
-    else
-    {
-        TPos zParent;
-        zParent = z.parent();   // Find x's parent
-        if ( zParent.left().element().key() == z.element().key() )
+        b.parent() = 0;
+    } else {
+        TPos zParent = z.parent(); // grandparent
+        if (zParent.left().element().key() == z.element().key())
             zParent.setLeft(b);
         else
             zParent.setRight(b);
@@ -120,8 +119,6 @@ typename RBTree<E>::TPos RBTree<E>::restructure(const TPos& v) {
 
     b.setLeft(a);
     a.setParent(b);
-    b.setRight(c);
-    c.setParent(b);
 
     a.setLeft(T0);
     if ( T0.element().key() != 0 )
@@ -130,6 +127,10 @@ typename RBTree<E>::TPos RBTree<E>::restructure(const TPos& v) {
     a.setRight(T1);
     if ( T1.element().key() != 0 )
         T1.setParent(a);
+
+
+    b.setRight(c);
+    c.setParent(b);
 
     c.setLeft(T2);
     if ( T2.element().key() != 0 )
@@ -200,7 +201,7 @@ void RBTree<E>::remedyDoubleRed(const TPos& z) {
         TPos u = v.parent(); // u is v’s parent
         if (u == ST::root()) return;
         setRed(u); // make u red
-        remedyDoubleRed(u); // may need to fix u now
+        remedyDoubleRed(u);
     }
 }
 
@@ -208,7 +209,8 @@ template <typename E>
 void RBTree<E>::erase(const K& k) {
     TPos u = ST::finder(k, ST::root()); // find the node
     if (Iterator(u) == ST::end())
-        throw runtime_error("Erase of nonexistent");
+        throw TreeExcept("Erase of nonexistent");
+
     TPos r = ST::eraser(u); // remove u
     if (r == ST::root() || r.element().isRed() || wasParentRed(r))
         setBlack(r); // fix by color change

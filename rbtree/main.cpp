@@ -42,9 +42,12 @@ int main() {
     // SearchTree< RBEntry< Entry<int, string> > > stree;
     
     // stree.insert(10, "Rado");
-    // stree.insert(20, "Mitko");
-    // stree.insert(15, "Pesho");
+    // stree.insert(5, "Mitko");
+    // stree.insert(20, "Pesho");
     // stree.insert(30, "Stefanela");
+    // stree.insert(15, "Stefanela");
+    // stree.insert(25, "Stefanela");
+    // stree.insert(1, "Stefanela");
     // stree.erase(10);
 
     // cout << (*stree.find(2)).value() << endl;
@@ -69,11 +72,11 @@ int main() {
 
     // Demonstrate the deletion by key and iterator
     // rbtree.erase(10);
-    rbtree.erase(ten);
+    rbtree.erase(fifteen);
 
     rbtree.print();
 
     // Demonstrate the search
-    cout << (*rbtree.find(5)).value() << endl;
+    cout << (*rbtree.find(15)).value() << endl;
     return 0;
 }

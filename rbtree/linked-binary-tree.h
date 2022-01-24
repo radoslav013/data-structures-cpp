@@ -146,7 +146,7 @@ void LinkedBinaryTree<T>::preorder(Node* v, PositionList& pl) const {
 
 template <typename T>
 typename LinkedBinaryTree<T>::Position LinkedBinaryTree<T>::removeAboveExternal(const Position& p) {
-    // if(p.isExternal()) {
+    if(p.isExternal()) {
         Node* w = p.node; Node* v = w->parent;
         Node* sib = (w == v->left ? v->right : v->left);
         if(v == _root) {
@@ -167,9 +167,9 @@ typename LinkedBinaryTree<T>::Position LinkedBinaryTree<T>::removeAboveExternal(
         n -= 2;
 
         return Position(sib);
-    // } else {
-    //     throw TreeExcept("p is not external");
-    // }
+    } else {
+        throw TreeExcept("p is not external");
+    }
 }
 
 template <typename T>
