@@ -3,8 +3,8 @@
 
 #include <iostream>
 #include <vector>
-#include <stdexcept>
-#include <time.h>
+#include <stdexcept> // for the runtime_error
+#include <time.h> // for the random numbers
 
 template <typename E>
 class SkipList;
