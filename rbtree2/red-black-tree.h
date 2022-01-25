@@ -6,6 +6,10 @@
 
 using namespace std;
 
+//! Tree exception class
+/*!
+    Custom Exception class for tree exceptions, extending runtime_error
+*/
 class TreeExcept : public runtime_error {
     public:
         TreeExcept(const string& msg) : runtime_error(msg) {}
@@ -16,6 +20,10 @@ class RBTree;
 
 #include "red-black-entry.h"
 
+//! Red black tree class
+/*!
+    Class implementing the red-black tree functionalities
+*/
 template <typename E>
 class RBTree {
     public:
@@ -24,9 +32,30 @@ class RBTree {
         typedef typename RBEntry::Value V; // a value
         class Position;
     private:
+        //! Node class
+        /*!
+            Node holding the data of each node in the tree
+            \param k      key value
+            \param v      data value
+            \return       iterator to the position of the modified or new entry
+        */
         class Node {
             private:
+                //! Default Constructor
+                /*!
+                    Default constructor
+                */
                 Node() : entry(), left(nullptr), right(nullptr), parent(nullptr) {}
+
+                //! Parameter constructor
+                /*!
+                    Construct the node object
+                    \param k      key value
+                    \param v      data value
+                    \param l      left pointer
+                    \param r      right pointer
+                    \param p      parent pointer
+                */
                 Node(const K& k, const V& v, Node* l = nullptr, Node* r = nullptr, Node* p = nullptr)
                     : entry(k, v), left(l), right(r), parent(p) {}
 
@@ -38,25 +67,124 @@ class RBTree {
             friend class RBTree<E>;
         };
     public:
+        //! Default constructor
+        /*!
+            Default constructor
+        */
         RBTree();
+
+        //! Destructor
+        /*!
+            Destructor
+        */
         ~RBTree();
+
+        //! Get size
+        /*!
+            Returns size
+            \return       size
+        */
         int size() const { return n; }
+
+        //! Checks if empty
+        /*!
+            Checks if empty
+            \return       true if empty
+        */
         bool empty() const { return size() == 0; }
+
+        //! Get root position
+        /*!
+            Get root position
+            \return       position of root
+        */
         Position root() const { return Position(_root); }
+
+        //! Leftmost node
+        /*!
+            Get leftmost node
+            \return       position of the first in in-order traversal
+        */
         Position begin() const;
+
+        //! Find position of entry by its key
+        /*!
+            Find position of entry by its key
+            \param k      key value
+            \return       position to the found entry, or exception
+        */
         Position find(const K& k) const;
+
+        //! Insert a new entry
+        /*!
+            Insert a new entry
+            \param k      key value
+            \param v      data value
+        */
         void insert(const K& k, const V& v);
+
+        //! Erase a position
+        /*!
+            Erase position
+            \param pos    position to remove
+        */
         void erase(const Position& pos);
+
+        //! Erase by key
+        /*!
+            Erase by key
+            \param k      key value
+        */
         void erase(const K& k);
+
+        //! Recover the broken red-black trees after insertion
+        /*!
+            Recover the broken red-black trees after insertion
+            \param pos      position
+        */
         void restructureAfterDelete(Position& pos);
+
+        //! Recover the broken red-black trees after deletion
+        /*!
+            Recover the broken red-black trees after deletion
+            \param pos      position
+        */
         void restructureAfterInsert(Position& pos);
 
-        // this algorithm is demonstrated in the 
-        // documentation under Self-balancing Binary Search Trees
+        //! Left transform
+        /*!
+            Left transform, demonstrated in the documentation under Self-balancing Binary Search Trees
+            \param pos      position to flip
+        */
         void leftTransform(Position pos);
+
+        //! Right transform
+        /*!
+            Right transform, demonstrated in the documentation under Self-balancing Binary Search Trees
+            \param pos      position to flip
+        */
         void rightTransform(Position pos);
+
+        //! Swap positions
+        /*!
+            Swap positions
+            \param u      position 1
+            \param v      position 2
+        */
         void swap(Position u, Position v);
+
+        //! Find position of minimum in left subtree
+        /*!
+            Find position of minimum in left subtree
+            \param pos      position
+            \return       position to the found entry
+        */
         Position minInLeftSubTree(const Position& pos) const;
+
+        //! Prints a tree(demonstrative function)
+        /*!
+            Prints a tree(demonstrative function)
+        */
         void print() const;
         void print(const Position& pos, string ind, bool last) const;
     private:
@@ -65,29 +193,170 @@ class RBTree {
 
         int n;
     public:
+        //! Position class
+        /*!
+            Position class helpping with moving around nodes
+        */
         class Position {
             public:
+                //! Default constructor
+                /*!
+                    Default constructor, initializing empty node
+                */
                 Position() : node(nullptr) { }
+
+                //! Parameter constructor
+                /*!
+                    Parameter constructor
+                    \param nide      node pointer
+                */
                 Position(Node* node) : node(node) { }
+
+                //! Copy constructor
+                /*!
+                    Copy constructor
+                    \param pos      position
+                */
                 Position(const Position& pos) : node(pos.node) { }
+
+                //! Overloaded = operator
+                /*!
+                    Overloaded = operator
+                    \param pos      position
+                    \return         Position reference
+                */
                 Position& operator =(const Position& pos) { node = pos.node; return *this; }
+
+                //! Check if two positions are equal
+                /*!
+                    Check if two positions are equal
+                    \param p      position
+                    \return       true if equal
+                */
                 bool operator ==(const Position& p) const { return node == p.node; }
+
+                //! Check if two positions are not equal
+                /*!
+                    Check if two positions are not equal
+                    \param p      position
+                    \return       true if not equal
+                */
                 bool operator !=(const Position& p) const { return node != p.node; }
+
+                //! Compare the keys of two positions
+                /*!
+                    Compare the keys of two positions
+                    \param p      position
+                    \return       true if left smaller
+                */
                 bool operator <(const Position& p) { return node->entry.key() < p.node->entry.key(); }
+
+                //! Compare the keys of two positions
+                /*!
+                    Compare the keys of two positions
+                    \param p      position
+                    \return       true if left smaller or equal
+                */
                 bool operator <=(const Position& p) { return node->entry.key() <= p.node->entry.key(); }
+
+                //! Compare the keys of two positions
+                /*!
+                    Compare the keys of two positions
+                    \param p      position
+                    \return       true if left bigger
+                */
                 bool operator >(const Position& p) { return node->entry.key() > p.node->entry.key(); }
+
+                //! Compare the keys of two positions
+                /*!
+                    Compare the keys of two positions
+                    \param p      position
+                    \return       true if left bigger or equal
+                */
                 bool operator >=(const Position& p) { return node->entry.key() >= p.node->entry.key(); }
+
+                //! Get the entry
+                /*!
+                    Get the entry
+                    \return       entry reference
+                */
                 RBEntry& operator*() { return node->entry; }
+
+                //! Get the entry
+                /*!
+                    Get the entry, idea gotten from std vector
+                    \return       entry pointer
+                */
                 RBEntry* operator->() const { return &node->entry; }
+
+                //! Checks if position exists
+                /*!
+                    Checks if position exists
+                    \return       true if pointer exists
+                */
                 bool exist() const { return node != nullptr; }
+
+                //! Checks if position is red
+                /*!
+                    Checks if position is red
+                    \return       true if red
+                */
                 bool isRed() const { return node->entry.color() == RED; }
+
+                //! Checks if position is black
+                /*!
+                    Checks if position is black
+                    \return       true if black
+                */
                 bool isBlack() const { return node->entry.color() == BLACK; }
+
+                //! Checks if position is root
+                /*!
+                    Checks if position is root
+                    \return       true if root
+                */
                 bool isRoot() const { return !node->parent; }
+
+                //! Get position of root
+                /*!
+                    Get position of root
+                    \return       position of parent
+                */
                 Position parent() const { return Position(node->parent); }
+
+                //! Get position of left child
+                /*!
+                    Get position of left child
+                    \return       position of left
+                */
                 Position left() const { return Position(node->left); }
+
+                //! Get position of right child
+                /*!
+                    Get position of right child
+                    \return       position of right
+                */
                 Position right() const { return Position(node->right); }
+
+                //! Set parent position
+                /*!
+                    Set parent position
+                    \param chNode      position
+                */
                 void setParent(const Position& chNode) { node->parent = chNode.node; }
+
+                //! Set left position
+                /*!
+                    Set left position
+                    \param chNode      position
+                */
                 void setLeft(const Position& chNode) { node->left = chNode.node; }
+
+                //! Set right position
+                /*!
+                    Set right position
+                    \param chNode      position
+                */
                 void setRight(const Position& chNode) { node->right = chNode.node; }
             private:
                 Node* node;
