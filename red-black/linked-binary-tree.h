@@ -28,6 +28,7 @@ class LinkedBinaryTree {
                 Position(LinkedBinaryTree<T>::Node* node);
                 Position(const Position& pos);
                 Position& operator =(const Position& pos);
+                bool operator ==(const Position& p) const { return node == p.node; }
                 T& operator*();
                 T& getValue() const;
                 bool isRoot() const;
@@ -185,7 +186,7 @@ template <typename T>
 void LinkedBinaryTree<T>::print(Node* node, int space) const {
     if(node) {
         print(node->right, space += 2);
-        cout << setw(space) << node->key << endl;
+        cout << setw(space) << node->key.key() << endl;
         print(node->left, space);
     }
 }

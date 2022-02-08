@@ -7,7 +7,6 @@ class RBTree;
 #include "search-tree.h"
 #include "red-black-entry.h"
 
-
 template <typename E> // a red-black tree
 class RBTree : public SearchTree< RBEntry<E> > {
     public: // public types
@@ -19,7 +18,7 @@ class RBTree : public SearchTree< RBEntry<E> > {
         typedef SearchTree<RBEntry> ST; // a search tree
         typedef typename ST::TPos TPos; // a tree position
     public: // public functions
-        RBTree(); // constructor
+        RBTree() : ST() {} // constructor
         Iterator insert(const K& k, const V& x); // insert (k,x)
         void erase(const K& k); // remove key k entry
         void erase(const Iterator& p); // remove entry at p
@@ -32,12 +31,12 @@ class RBTree : public SearchTree< RBEntry<E> > {
 
 template <typename E>
 void RBTree<E>::setBlack(const TPos& v) {
-    (*v).setColor(Color.BLACK);
+    v.getValue().setColor(BLACK);
 }
 
 template <typename E>
 void RBTree<E>::setRed(const TPos& v) {
-    (*v).setColor(Color.RED);
+    v.getValue().setColor(RED);
 }
 
 template <typename E>

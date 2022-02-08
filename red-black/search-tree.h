@@ -19,6 +19,7 @@ class SearchTree {
         void erase(const Iterator& p); // remove entry at p
         Iterator begin(); // iterator to first entry
         Iterator end() { return Iterator(T.root()); }  // iterator to end entry
+        void print() const { T.print(); }
     protected: // local utilities
         typedef LinkedBinaryTree<E> BinaryTree; // linked binary tree
         typedef typename BinaryTree::Position TPos; // position in the tree
@@ -26,7 +27,7 @@ class SearchTree {
         TPos finder(const K& k, const TPos& v); // find utility
         TPos inserter(const K& k, const V& x); // insert utility
         TPos eraser(TPos& v); // erase utility
-        TPos restructure(const TPos& v); // restructure
+        TPos restructure(const TPos& v); // restructure trinode 
         TPos sibling(const TPos& v);
     private: // member data
         BinaryTree T; // the binary tree
@@ -48,10 +49,12 @@ class SearchTree {
 
 template <typename E>
 typename SearchTree<E>::TPos SearchTree<E>::sibling(const TPos& v) {
-    Iterator it(v);
-    ++it;
-    ++it;
-    return *it;
+    TPos parent = v.parent();
+    if(parent.left() == v) {
+        return parent.right();
+    } else {
+        return parent.left();
+    }
 }
 
 template <typename E>
@@ -138,6 +141,93 @@ void SearchTree<E>::erase(const Iterator& p) {
 
 template <typename E>
 typename SearchTree<E>::TPos SearchTree<E>::restructure(const TPos& v) {
+    /* TPos x, y, z, a, b, c, T0, T1, T2, T3;
 
+    x = v;
+    y = x.parent(); // Parent of x
+    z = y.parent(); // Parent of y (Grandparent of x)
+
+    bool xIsLeftChild = (x.element().key() == y.left().element().key());
+    bool yIsLeftChild = (y.element().key() == z.left().element().key());
+
+    if (xIsLeftChild && yIsLeftChild) // Configuration 1
+    {
+        a = x;
+        b = y;
+        c = z;
+        T0 = a.left();
+        T1 = a.right();
+        T2 = b.right();
+        T3 = c.right();
+    }
+    else if (!xIsLeftChild && !yIsLeftChild) // Configuration 2
+    {
+        a = z;
+        b = y;
+        c = x;
+        T0 = a.left();
+        T1 = b.left();
+        T2 = c.left();
+        T3 = c.right();
+    }
+    else if(!xIsLeftChild && yIsLeftChild) // Configuration 3
+    {
+        a = y;
+        b = x;
+        c = z;
+        T0 = a.left();
+        T1 = b.left();
+        T2 = b.right();
+        T3 = c.right();
+    }
+    else // Configuration 4
+    {
+        a = z;
+        b = x;
+        c = y;
+        T0 = a.left();
+        T1 = b.left();
+        T2 = b.right();
+        T3 = c.right();
+    }
+
+    if(z.element().key() == root().element().key())
+    {
+        root() = b;
+        b.parent() = NULL;
+    }
+    else
+    {
+        TPos zParent;
+        zParent = z.parent();   // Find x's parent
+        if ( zParent.left().element().key() == z.element().key() )
+            zParent.setLeft(b);
+        else
+            zParent.setRight(b);
+    }
+
+    b.setLeft(a);
+    a.setParent(b);
+
+    a.setLeft(T0);
+    if (T0.element().key())
+        T0.setParent(a);
+
+    a.setRight(T1);
+    if (T1.element().key())
+        T1.setParent(a);
+
+    b.setRight(c);
+    c.setParent(b);
+
+    c.setLeft(T2);
+    if (T2.element().key())
+        T2.setParent(c);
+
+    c.setRight(T3);
+    if (T3.element().key())
+        T3.setParent(c);
+
+    return b; */
 }
 #endif
